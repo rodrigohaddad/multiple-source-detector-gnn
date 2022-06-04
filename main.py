@@ -1,20 +1,7 @@
 from graph_transformation.graph_creation import GraphFactory
-from graph_transformation.provision_graph import InfectedGraphProvision
+from graph_transformation.provision_graph import InfectedGraphProvision, InfectionConfig
 from graph_transformation.transformation import GraphTransform
 import random
-
-
-class InfectionConfig:
-    def __init__(self,
-                 model,
-                 n_iter,
-                 params={}):
-        self.model = model
-        self.n_iter = n_iter
-        self.params = params
-
-    def set_params(self, pr):
-        self.params = pr
 
 
 INF_CONFIGS = [InfectionConfig(model='SIR',
@@ -37,7 +24,8 @@ def main():
     g_inf = InfectedGraphProvision(graph=G,
                                    infection_config=INF_CONFIGS[1])
 
-    g_transformed = GraphTransform(g_inf)
+    g_transformed = GraphTransform(g_inf=g_inf,
+                                   k=3)
 
 
 if __name__ == '__main__':

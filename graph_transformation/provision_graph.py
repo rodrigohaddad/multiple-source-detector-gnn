@@ -5,6 +5,19 @@ MODELS = {'SI': ep.SIModel,
           'SIR': ep.SIRModel}
 
 
+class InfectionConfig:
+    def __init__(self,
+                 model,
+                 n_iter,
+                 params={}):
+        self.model = model
+        self.n_iter = n_iter
+        self.params = params
+
+    def set_params(self, pr):
+        self.params = pr
+
+
 class InfectedGraphProvision:
     def __init__(self,
                  graph,
