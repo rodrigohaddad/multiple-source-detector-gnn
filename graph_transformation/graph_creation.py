@@ -5,11 +5,7 @@ class GraphFactory:
     def __init__(self,
                  file_dir='',
                  ):
-        self._G = self._create_graph(file_dir)
-        self.return_graph()
-
-    def return_graph(self):
-        return self._G
+        self.G = self._create_graph(file_dir)
 
     @staticmethod
     def _create_random_graph():

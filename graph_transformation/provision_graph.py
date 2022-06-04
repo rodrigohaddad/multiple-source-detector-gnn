@@ -1,4 +1,3 @@
-import networkx as nx
 import ndlib.models.epidemics as ep
 import ndlib.models.ModelConfig as mc
 
@@ -8,19 +7,17 @@ MODELS = {'SI': ep.SIModel,
 
 class InfectedGraphProvision:
     def __init__(self,
-                 model,
-                 params,
-                 n_iter,
                  graph,
+                 infection_config,
                  ):
         self.G = graph
 
-        self.model = MODELS[model](self.G)
+        self.model = MODELS[infection_config.model](self.G)
         self.config = mc.Configuration()
         self.trends = None
 
-        self._add_model_params(params)
-        self._infect_graph(n_iter)
+        self._add_model_params(infection_config.params)
+        self._infect_graph(infection_config.n_iter)
 
     def _add_model_params(self, params):
         for param_name, param_value in params.items():
