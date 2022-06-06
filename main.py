@@ -25,7 +25,8 @@ def main():
                                    infection_config=INF_CONFIGS[1])
 
     g_transformed = GraphTransform(g_inf=g_inf,
-                                   k=3)
+                                   k=3,
+                                   alpha_weight=.5)
 
 
 if __name__ == '__main__':
