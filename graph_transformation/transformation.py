@@ -1,26 +1,11 @@
 import networkx as nx
 
-
-class NodeMetrics:
-    def __init__(self,
-                 hood_infection,
-                 alpha_numerator,
-                 alpha_denominator):
-        self.eta = self._calculate_eta(hood_infection, alpha_denominator)
-        self.alpha = self._calculate_alpha(alpha_numerator, alpha_denominator)
-
-    @classmethod
-    def _calculate_eta(cls, h_inf, a_den):
-        return [d and n / d or 0 for n, d in zip(h_inf, a_den)]
-
-    @classmethod
-    def _calculate_alpha(cls, a_num, a_den):
-        return [d and n / d or 0 for n, d in zip(a_num, a_den)]
+from graph_transformation.node_metrics import NodeMetrics
 
 
 class GraphTransform:
     nodes_metrics = dict()
-    G_new = None
+    G_new = nx.Graph()
 
     def __init__(self, g_inf, k, alpha_weight):
         self.G = g_inf.G
@@ -30,10 +15,16 @@ class GraphTransform:
 
         self.shortest_paths = nx.shortest_path_length(self.G)
 
-        self._calculate_metrics()
-        self._create_new_graph()
+        self._calculate_infection()
+        self._create_new_graph(self._calculate_nodes_weights())
 
-    def _calculate_ring_infection(self):
+    def _calculate_neighbourhood_infection(self, v):
+        n_inf = 0
+        for neighbor in self.G.neighbors(v):
+            n_inf += self.model.status[neighbor]
+        return len(self.G[v]) and n_inf / len(self.G[v]) or 0
+
+    def _calculate_infection(self):
         for u, v_dict in self.shortest_paths:
             alpha_numerator = [0] * self.k
             alpha_denominator = [0] * self.k
@@ -52,24 +43,26 @@ class GraphTransform:
                                                 alpha_numerator,
                                                 alpha_denominator)
 
-    def _calculate_neighbourhood_infection(self, v):
-        n_inf = 0
-        for neighbor in self.G.neighbors(v):
-            n_inf += self.model.status[neighbor]
-        return len(self.G[v]) and n_inf / len(self.G[v]) or 0
+    def _calculate_weight(self, ring_index, neighbor_index):
+        return self.alpha_weight * ring_index + (1 - self.alpha_weight) * neighbor_index
 
-    def _calculate_node_infection_index(self, ring_index, neighbor_index):
-        return self.alpha_weight*ring_index+(1-self.alpha_weight)*neighbor_index
+    def _calculate_sum_of_difference_infections(self, u_metrics, v_metrics):
+        f_uv, g_uv = 0, 0
+        for u_eta, u_alpha, v_eta, v_alpha in (u_metrics.eta, u_metrics.alpha, v_metrics.eta, v_metrics.alpha):
+            f_uv += abs(u_alpha - v_alpha)
+            g_uv += abs(u_eta - v_eta)
+        return 1 - f_uv / self.k, 1 - g_uv / self.k
 
-    def _calculate_infection_similarity(self):
+    def _calculate_nodes_weights(self):
         weights = []
         for u, u_metrics in self.nodes_metrics.items():
             for v, v_metrics in self.nodes_metrics.items():
-                weights.append((u, v,))
+                if u == v:
+                    continue
+                f_uv, g_uv = self._calculate_sum_of_difference_infections(u_metrics,
+                                                                          v_metrics)
+                weights.append((u, v, {'weight': self._calculate_weight(f_uv, g_uv)}))
+        return weights
 
-    def _calculate_metrics(self):
-        self._calculate_ring_infection()
-        self._calculate_infection_similarity()
-
-    def _create_new_graph(self):
-        self.G_new.add_edges_from([(1, 2, {'weight': 0.3}), (1, 3, {'weight': 0.3})])
+    def _create_new_graph(self, weights):
+        self.G_new.add_edges_from(weights)
