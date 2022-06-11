@@ -1,8 +1,7 @@
 import ndlib.models.epidemics as ep
 import ndlib.models.ModelConfig as mc
-import pickle
 
-from save_to_pickle import save_to_pickle
+from utils.save_to_pickle import save_to_pickle
 
 MODELS = {'SI': ep.SIModel,
           'SIR': ep.SIRModel}
@@ -24,7 +23,7 @@ class InfectedGraphProvision:
         self._infect_graph(infection_config.n_iter)
 
         save_to_pickle(self, 'infected_graph',
-                       f'{self.infection_config}')
+                       f'{self.infection_config.name}-infected')
 
     def _add_model_params(self, params):
         for param_name, param_value in params.items():

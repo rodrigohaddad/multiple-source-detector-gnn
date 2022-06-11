@@ -1,4 +1,4 @@
-from data.load_graph_config import load_config
+from utils.load_graph_config import load_config
 from infected_graph_factory.graph_creation import GraphFactory
 from infected_graph_factory.provision_graph import InfectedGraphProvision
 from graph_transformation.transformation import GraphTransform

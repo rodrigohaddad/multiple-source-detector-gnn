@@ -1,7 +1,7 @@
 import networkx as nx
 
 from graph_transformation.node_metrics import NodeMetrics
-from save_to_pickle import save_to_pickle
+from utils.save_to_pickle import save_to_pickle
 
 
 class GraphTransform:
@@ -19,7 +19,7 @@ class GraphTransform:
         self._calculate_infection()
         self._create_new_graph(self._calculate_nodes_weights())
         save_to_pickle(self.G_new, 'graph_transformed',
-                       f'{g_inf.infection_config}')
+                       f'{g_inf.name}-transformed')
 
     def _calculate_neighbourhood_infection(self, v):
         n_inf = 0
@@ -69,3 +69,4 @@ class GraphTransform:
 
     def _create_new_graph(self, weights):
         self.G_new.add_edges_from(weights)
+        nx.set_node_attributes(self.G_new, self.model.status, name='infected')
