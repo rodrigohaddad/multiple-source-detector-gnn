@@ -1,4 +1,5 @@
 import networkx as nx
+import random
 
 
 class GraphFactory:
@@ -17,4 +18,7 @@ class GraphFactory:
         return nx.read_edgelist(file_dir,
                                 create_using=nx.Graph(),
                                 nodetype=int)
+
+    def select_random_sources(self):
+        return random.sample(list(self.G.nodes()), 15)
 

@@ -1,21 +1,11 @@
 import ndlib.models.epidemics as ep
 import ndlib.models.ModelConfig as mc
+import pickle
+
+from save_to_pickle import save_to_pickle
 
 MODELS = {'SI': ep.SIModel,
           'SIR': ep.SIRModel}
-
-
-class InfectionConfig:
-    def __init__(self,
-                 model,
-                 n_iter,
-                 params={}):
-        self.model = model
-        self.n_iter = n_iter
-        self.params = params
-
-    def set_params(self, pr):
-        self.params = pr
 
 
 class InfectedGraphProvision:
@@ -24,6 +14,7 @@ class InfectedGraphProvision:
                  infection_config,
                  ):
         self.G = graph
+        self.infection_config = infection_config
 
         self.model = MODELS[infection_config.model](self.G)
         self.config = mc.Configuration()
@@ -31,6 +22,9 @@ class InfectedGraphProvision:
 
         self._add_model_params(infection_config.params)
         self._infect_graph(infection_config.n_iter)
+
+        save_to_pickle(self, 'infected_graph',
+                       f'{self.infection_config}')
 
     def _add_model_params(self, params):
         for param_name, param_value in params.items():
