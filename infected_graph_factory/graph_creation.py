@@ -6,7 +6,7 @@ class GraphFactory:
     def __init__(self,
                  file_dir='',
                  ):
-        self.G = self._create_graph(file_dir)
+        self.G = self._create_graph(file_dir) if len(file_dir) else self._create_random_graph()
 
     @staticmethod
     def _create_random_graph():

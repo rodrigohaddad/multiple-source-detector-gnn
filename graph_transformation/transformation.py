@@ -8,24 +8,28 @@ class GraphTransform:
     nodes_metrics = dict()
     G_new = nx.Graph()
 
-    def __init__(self, g_inf, k, alpha_weight):
+    def __init__(self, g_inf, k, min_weight, alpha_weight):
         self.G = g_inf.G
         self.model = g_inf.model
         self.k = k + 1
+        self.min_weight = min_weight
         self.alpha_weight = alpha_weight
 
         self.shortest_paths = nx.shortest_path_length(self.G)
 
         self._calculate_infection()
         self._create_new_graph(self._calculate_nodes_weights())
+        print(f'C. Components: {nx.number_connected_components(self.G_new)}')
         save_to_pickle(self.G_new, 'graph_transformed',
-                       f'{g_inf.name}-transformed')
+                       f'{g_inf.infection_config.name}-transformed')
 
     def _calculate_neighbourhood_infection(self, v):
         n_inf = 0
+        n_neighbors = 0
         for neighbor in self.G.neighbors(v):
             n_inf += self.model.status[neighbor]
-        return len(self.G[v]) and n_inf / len(self.G[v]) or 0
+            n_neighbors += 1
+        return len(self.G[v]) and n_inf / n_neighbors or 0
 
     def _calculate_infection(self):
         for u, v_dict in self.shortest_paths:
@@ -64,7 +68,9 @@ class GraphTransform:
                     continue
                 f_uv, g_uv = self._calculate_sum_of_difference_infections(u_metrics,
                                                                           v_metrics)
-                weights.append((u, v, {'weight': self._calculate_weight(f_uv, g_uv)}))
+                weight = self._calculate_weight(f_uv, g_uv)
+                if weight >= self.min_weight:
+                    weights.append((u, v, {'weight': weight}))
         return weights
 
     def _create_new_graph(self, weights):

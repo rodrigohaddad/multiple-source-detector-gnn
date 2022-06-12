@@ -11,7 +11,13 @@
     }
   },
   {
+    "name": "randba",
     "model": "SI",
-    "n_iter":200
+    "n_iter": 200,
+    "params": {
+      "beta": 0.001,
+      "gamma": 0.01,
+      "fraction_infected": 0.05
+    }
   }
 ]

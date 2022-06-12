@@ -5,7 +5,8 @@ from graph_transformation.transformation import GraphTransform
 
 
 def main():
-    configs = load_config()
+    # configs = load_config()
+    configs = [load_config()[1]]
     for inf_config in configs:
         g_factory = GraphFactory(inf_config.file_path)
 
@@ -18,6 +19,7 @@ def main():
 
         g_transformed = GraphTransform(g_inf=g_inf,
                                        k=3,
+                                       min_weight=0.3,
                                        alpha_weight=.5)
 
 

@@ -3,7 +3,7 @@ class InfectionConfig:
                  model,
                  n_iter,
                  name,
-                 file_path,
+                 file_path='',
                  params={}):
         self.model = model
         self.n_iter = n_iter
@@ -12,5 +12,5 @@ class InfectionConfig:
         self.file_path = file_path
 
     def set_params(self, pr):
-        self.params = pr
+        self.params = {**self.params, **pr}
         return self
