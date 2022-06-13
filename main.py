@@ -12,7 +12,7 @@ def main():
 
         inf_config.set_params({'beta': 0.001,
                                'Infected': g_factory.select_random_sources(),
-                               'fraction_infected': 0.15})
+                               'fraction_infected': 0.05})
 
         g_inf = InfectedGraphProvision(graph=g_factory.G,
                                        infection_config=inf_config)

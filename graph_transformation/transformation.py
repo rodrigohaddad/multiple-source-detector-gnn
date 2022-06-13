@@ -70,6 +70,8 @@ class GraphTransform:
                                                                           v_metrics)
                 weight = self._calculate_weight(f_uv, g_uv)
                 if weight >= self.min_weight:
+                    # Add the lowest connection if node u is alone
+                    # Do not connect if nodes were neighbors previously
                     weights.append((u, v, {'weight': weight}))
         return weights
 
