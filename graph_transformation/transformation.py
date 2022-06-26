@@ -1,7 +1,19 @@
 import networkx as nx
+from dataclasses import dataclass
+from torch_geometric.utils import from_networkx
 
 from graph_transformation.node_metrics import NodeMetrics
 from utils.save_to_pickle import save_to_pickle
+
+
+@dataclass
+class GGraph:
+    def __init__(self, g):
+        self.G = g
+        self.pyG = from_networkx(G=g,
+                                 # group_node_attrs=['infected'],
+                                 # group_edge_attrs=['weight']
+                                 )
 
 
 class GraphTransform:
@@ -20,7 +32,7 @@ class GraphTransform:
         self._calculate_infection()
         self._create_new_graph(self._calculate_nodes_weights())
         print(f'C. Components: {nx.number_connected_components(self.G_new)}')
-        save_to_pickle(self.G_new, 'graph_transformed',
+        save_to_pickle(GGraph(self.G_new), 'graph_transformed',
                        f'{g_inf.infection_config.name}-transformed')
 
     def _calculate_neighbourhood_infection(self, v):
@@ -72,9 +84,10 @@ class GraphTransform:
                 if weight >= self.min_weight:
                     # Add the lowest connection if node u is alone
                     # Do not connect if nodes were neighbors previously
-                    weights.append((u, v, {'weight': weight}))
+                    # Stop infecting when reaching desired infection percentage
+                    weights.append((u, v, {'edge_weight': weight, 'weight': weight}))
         return weights
 
     def _create_new_graph(self, weights):
         self.G_new.add_edges_from(weights)
-        nx.set_node_attributes(self.G_new, self.model.status, name='infected')
+        nx.set_node_attributes(self.G_new, self.model.status, name='y')
