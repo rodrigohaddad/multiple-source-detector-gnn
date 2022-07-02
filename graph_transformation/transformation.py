@@ -1,9 +1,13 @@
 import networkx as nx
 from dataclasses import dataclass
 from torch_geometric.utils import from_networkx
+import torch
 
+from embedding import DEVICE
 from graph_transformation.node_metrics import NodeMetrics
 from utils.save_to_pickle import save_to_pickle
+
+DEVICE = torch.device('cpu' if torch.cuda.is_available() else 'cpu')
 
 
 @dataclass
@@ -11,9 +15,10 @@ class GGraph:
     def __init__(self, g):
         self.G = g
         self.pyG = from_networkx(G=g,
-                                 # group_node_attrs=['infected'],
+                                 # group_node_attrs=['source'],
+                                 group_node_attrs=['infected'],
                                  # group_edge_attrs=['weight']
-                                 )
+                                 ).to(device=DEVICE)
 
 
 class GraphTransform:
@@ -90,4 +95,5 @@ class GraphTransform:
 
     def _create_new_graph(self, weights):
         self.G_new.add_edges_from(weights)
-        nx.set_node_attributes(self.G_new, self.model.status, name='y')
+        nx.set_node_attributes(self.G_new, self.model.status, name='infected')
+        nx.set_node_attributes(self.G_new, self.model.initial_status, name='y')

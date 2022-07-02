@@ -1,10 +1,11 @@
 import os
 import pickle
 import torch
-import networkx as nx
-from torch_geometric.data import Data
 
 from gnn_embedding.gnn import GraphSAGE
+from gnn_embedding.gnn_2 import GraphSAGE2
+from utils.save_to_pickle import save_to_pickle
+from utils.test_model import test
 
 TRANSFORMED_GRAPH = 'data/graph_transformed'
 EMBEDDING = 'data/embedding'
@@ -24,10 +25,17 @@ def main():
         pyg_graph = pickle.load(open(file, 'rb'))
         data = pyg_graph.pyG
         # data.edge_weight
-        model = GraphSAGE(in_channels=data.num_features,
-                          out_channels=int(data.y.max() + 1),
-                          num_layers=3).to(DEVICE)
+        # model = GraphSAGE(in_channels=data.num_features,
+        #                   out_channels=int(data.y.max() + 1),
+        #                   num_layers=3)
+        model = GraphSAGE2(dim_in=data.num_features,
+                           dim_h=64,
+                           dim_out=int(data.y.max() + 1))
         model.fit(data, 200)
+
+        save_to_pickle(model, 'model', 'sagemodel')
+
+        print(f'\nGraphSAGE test accuracy: {test(model, data)*100:.2f}%\n')
 
 
 if __name__ == '__main__':
