@@ -56,6 +56,7 @@ class SAGE(nn.Module):
         optimizer = torch.optim.Adam(self.parameters(), lr=0.01)
         x, edge_index = data.x.to(device), data.edge_index.to(device)
         self.train()
+        # data.val_mask
 
         for epoch in range(epochs + 1):
             total_loss = 0
