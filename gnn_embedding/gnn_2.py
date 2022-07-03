@@ -1,7 +1,7 @@
 from sklearn.model_selection import train_test_split
 import torch
 import torch.nn.functional as F
-from torch_geometric.loader import NeighborLoader
+from torch_geometric.loader import NeighborLoader, NeighborSampler
 from torch_geometric.nn import GraphConv
 from torch_geometric.utils import accuracy
 
@@ -33,7 +33,6 @@ class GraphSAGE2(torch.nn.Module):
 
         data.train_mask, data.test_mask = train_test_split(x, test_size=0.33, shuffle=True)
         data.train_mask, data.val_mask = train_test_split(data.train_mask, test_size=0.33)
-
         train_loader = NeighborLoader(
             data,
             num_neighbors=[15, 15, 10],
