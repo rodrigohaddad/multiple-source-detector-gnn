@@ -3,7 +3,7 @@ from dataclasses import dataclass
 from torch_geometric.utils import from_networkx
 import torch
 
-from embedding import DEVICE
+from create_model import DEVICE
 from graph_transformation.node_metrics import NodeMetrics
 from utils.save_to_pickle import save_to_pickle
 
@@ -96,4 +96,4 @@ class GraphTransform:
     def _create_new_graph(self, weights):
         self.G_new.add_edges_from(weights)
         nx.set_node_attributes(self.G_new, self.model.status, name='infected')
-        nx.set_node_attributes(self.G_new, self.model.initial_status, name='y')
+        # nx.set_node_attributes(self.G_new, self.model.initial_status, name='y')

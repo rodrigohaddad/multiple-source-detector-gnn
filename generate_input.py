@@ -17,10 +17,10 @@ def main():
         g_inf = InfectedGraphProvision(graph=g_factory.G,
                                        infection_config=inf_config)
 
-        g_transformed = GraphTransform(g_inf=g_inf,
-                                       k=3,
-                                       min_weight=0.3,
-                                       alpha_weight=.5)
+        GraphTransform(g_inf=g_inf,
+                       k=3,
+                       min_weight=0.3,
+                       alpha_weight=.5)
 
 
 if __name__ == '__main__':
