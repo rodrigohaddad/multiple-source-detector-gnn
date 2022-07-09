@@ -90,6 +90,7 @@ class GraphTransform:
                     # Add the lowest connection if node u is alone
                     # Do not connect if nodes were neighbors previously
                     # Stop infecting when reaching desired infection percentage
+                    # Add edges to edge_weight on graphsage (see github question)
                     weights.append((u, v, {'edge_weight': weight, 'weight': weight}))
         return weights
 
