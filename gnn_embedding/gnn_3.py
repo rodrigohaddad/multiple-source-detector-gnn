@@ -8,7 +8,8 @@ from gnn_embedding.operator import MsgConv
 
 
 class SAGE(nn.Module):
-    def __init__(self, in_channels, hidden_channels, num_layers, train_loader):
+    def __init__(self, in_channels: int, hidden_channels: int,
+                 num_layers: int, train_loader):
         super(SAGE, self).__init__()
         self.num_layers = num_layers
         self.convs = nn.ModuleList()

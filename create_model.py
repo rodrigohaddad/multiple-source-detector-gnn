@@ -25,10 +25,6 @@ def main():
         pyg_graph = pickle.load(open(file, 'rb'))
         data = pyg_graph.pyG
 
-        # model = GraphSAGE2(dim_in=data.num_features,
-        #                    dim_h=64,
-        #                    dim_out=int(data.x.max() + 1))
-
         train_loader = NeighborSampler(data.edge_index, sizes=[20, 15, 10], batch_size=256,
                                        shuffle=True, num_nodes=data.num_nodes)
 

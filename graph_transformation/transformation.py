@@ -1,3 +1,5 @@
+import itertools
+
 import networkx as nx
 from dataclasses import dataclass
 from torch_geometric.utils import from_networkx
@@ -19,6 +21,16 @@ class GGraph:
                                  group_node_attrs=['infected'],
                                  # group_edge_attrs=['weight']
                                  ).to(device=DEVICE)
+
+
+class WeightConfig:
+    def __init__(self, u, v, weight):
+        self.u = u
+        self.v = v
+        self.weight = weight
+
+    def __call__(self, *args, **kwargs):
+        return self.u, self.v, {'edge_weight': self.weight, 'weight': self.weight}
 
 
 class GraphTransform:
@@ -79,22 +91,22 @@ class GraphTransform:
 
     def _calculate_nodes_weights(self):
         weights = []
-        for u, u_metrics in self.nodes_metrics.items():
-            for v, v_metrics in self.nodes_metrics.items():
-                if u == v:
-                    continue
-                f_uv, g_uv = self._calculate_sum_of_difference_infections(u_metrics,
-                                                                          v_metrics)
-                weight = self._calculate_weight(f_uv, g_uv)
-                if weight >= self.min_weight:
-                    # Add the lowest connection if node u is alone
-                    # Do not connect if nodes were neighbors previously
-                    # Stop infecting when reaching desired infection percentage
-                    # Add edges to edge_weight on graphsage (see github question)
-                    weights.append((u, v, {'edge_weight': weight, 'weight': weight}))
+        self.all_weights = dict()
+        nodes_address = list(itertools.combinations(self.nodes_metrics.keys(), 2))
+        for u, v in nodes_address:
+            f_uv, g_uv = self._calculate_sum_of_difference_infections(self.nodes_metrics[u],
+                                                                      self.nodes_metrics[v])
+            weight = self._calculate_weight(f_uv, g_uv)
+
+            self.all_weights[u] = {**self.all_weights.get(u, {}), **{v: weight}}
+
+            if weight >= self.min_weight and self.G[u].get(v) is not None:
+                # Stop infecting when reaching desired infection percentage
+                weights.append((u, v, {'edge_weight': weight, 'weight': weight}))
+
         return weights
 
     def _create_new_graph(self, weights):
         self.G_new.add_edges_from(weights)
         nx.set_node_attributes(self.G_new, self.model.status, name='infected')
-        # nx.set_node_attributes(self.G_new, self.model.initial_status, name='y')
+        nx.set_node_attributes(self.G_new, self.model.initial_status, name='source')
