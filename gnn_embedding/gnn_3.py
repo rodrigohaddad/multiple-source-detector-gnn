@@ -9,11 +9,10 @@ from gnn_embedding.operator import MsgConv
 
 class SAGE(nn.Module):
     def __init__(self, in_channels: int, hidden_channels: int,
-                 num_layers: int, train_loader):
+                 num_layers: int):
         super(SAGE, self).__init__()
         self.num_layers = num_layers
         self.convs = nn.ModuleList()
-        self.train_loader = train_loader
 
         for i in range(num_layers):
             in_channels = in_channels if i == 0 else hidden_channels
@@ -37,7 +36,7 @@ class SAGE(nn.Module):
                 x = F.dropout(x, p=0.5, training=self.training)
         return x
 
-    def fit(self, data, device, epochs):
+    def fit(self, data, device, epochs, train_loader):
         optimizer = torch.optim.Adam(self.parameters(), lr=0.01)
         x, edge_index = data.x.to(device), data.edge_index.to(device)
         self.train()
@@ -46,12 +45,12 @@ class SAGE(nn.Module):
 
         for epoch in range(epochs + 1):
             total_loss = 0
-            for batch_size, n_id, adjs in self.train_loader:
+            for batch_size, n_id, adjs in train_loader:
                 # `adjs` holds a list of `(edge_index, e_id, size)` tuples.
                 adjs = [adj.to(device) for adj in adjs]
                 optimizer.zero_grad()
 
-                # Escolha dos elementos que compõem o loss. Positivo devem ser "bons" exemplos, e negativos o contrário.
+                # Escolha dos elementos que compõem o loss. Positivos devem ser "bons" exemplos, e negativos o contrário.
                 # Um bom exemplo seria um vizinho
                 # Aleatório que não é vizinho e nem vizinho de vizinho.
                 # Distribuição pode ser uma uniforme dos vértices que estão a distância >= 3
@@ -69,7 +68,7 @@ class SAGE(nn.Module):
                 val += torch.sum(torch.abs(out))
 
 
-            # Print metrics every 10 epochs
+            # Print metrics every x epochs
             if epoch % 10 == 0:
                 print(total_loss / data.num_nodes)
                 print(f'Epoch {epoch:>3} | Train Loss: {total_loss / len(data):.3f}')

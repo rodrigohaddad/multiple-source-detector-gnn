@@ -9,7 +9,7 @@ def main():
     configs = load_config()
     # configs = [load_config()[1]]
     for inf_config in configs:
-        g_factory = GraphFactory(inf_config.file_path)
+        g_factory = GraphFactory(**inf_config.__dict__)
 
         inf_config.set_params({'beta': 0.001,
                                'Infected': g_factory.select_random_sources(),

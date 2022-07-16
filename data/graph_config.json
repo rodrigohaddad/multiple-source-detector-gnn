@@ -13,6 +13,7 @@
   },
   {
     "name": "randba",
+    "graph_type": "ba",
     "overwrite_previous": false,
     "model": "SI",
     "n_iter": 10,
@@ -23,9 +24,21 @@
   },
   {
     "name": "randbatest",
+    "graph_type": "ba",
     "overwrite_previous": false,
     "model": "SI",
     "n_iter": 10,
+    "params": {
+      "beta": 0.001,
+      "gamma": 0.01
+    }
+  },
+  {
+    "name": "randertest",
+    "graph_type": "er",
+    "overwrite_previous": false,
+    "model": "SI",
+    "n_iter": 20,
     "params": {
       "beta": 0.001,
       "gamma": 0.01

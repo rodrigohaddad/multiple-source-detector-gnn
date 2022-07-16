@@ -1,4 +1,5 @@
 import itertools
+from typing import Any
 
 import networkx as nx
 from dataclasses import dataclass
@@ -37,7 +38,7 @@ class GraphTransform:
     nodes_metrics = dict()
     G_new = nx.Graph()
 
-    def __init__(self, g_inf, k, min_weight, alpha_weight):
+    def __init__(self, g_inf, k: int, min_weight: float, alpha_weight: float):
         self.G = g_inf.G
         self.model = g_inf.model
         self.k = k + 1
@@ -45,14 +46,14 @@ class GraphTransform:
         self.alpha_weight = alpha_weight
 
         self.shortest_paths = nx.shortest_path_length(self.G)
-
         self._calculate_infection()
         self._create_new_graph(self._calculate_nodes_weights())
+
         print(f'C. Components: {nx.number_connected_components(self.G_new)}')
         save_to_pickle(GGraph(self.G_new), 'graph_transformed',
                        f'{g_inf.infection_config.name}-transformed')
 
-    def _calculate_neighbourhood_infection(self, v):
+    def _calculate_neighbourhood_infection(self, v: int) -> float:
         n_inf = 0
         n_neighbors = 0
         for neighbor in self.G.neighbors(v):
@@ -70,6 +71,7 @@ class GraphTransform:
                     continue
                 if distance >= self.k:
                     break
+
                 alpha_numerator[distance] += self.model.status[v]
                 alpha_denominator[distance] += 1
                 n_inf = self._calculate_neighbourhood_infection(v)
@@ -79,17 +81,17 @@ class GraphTransform:
                                                 alpha_numerator,
                                                 alpha_denominator)
 
-    def _calculate_weight(self, ring_index, neighbor_index):
+    def _calculate_weight(self, ring_index: float, neighbor_index: float) -> float:
         return self.alpha_weight * ring_index + (1 - self.alpha_weight) * neighbor_index
 
-    def _calculate_sum_of_difference_infections(self, u_metrics, v_metrics):
+    def _calculate_sum_of_difference_infections(self, u_metrics, v_metrics) -> tuple[float, float]:
         f_uv, g_uv = 0, 0
         for u_eta, u_alpha, v_eta, v_alpha in (u_metrics.eta, u_metrics.alpha, v_metrics.eta, v_metrics.alpha):
             f_uv += abs(u_alpha - v_alpha)
             g_uv += abs(u_eta - v_eta)
         return 1 - f_uv / self.k, 1 - g_uv / self.k
 
-    def _calculate_nodes_weights(self):
+    def _calculate_nodes_weights(self) -> list[tuple[Any, Any, dict[str, float]]]:
         weights = []
         self.all_weights = dict()
         nodes_address = list(itertools.combinations(self.nodes_metrics.keys(), 2))
@@ -106,7 +108,7 @@ class GraphTransform:
 
         return weights
 
-    def _create_new_graph(self, weights):
+    def _create_new_graph(self, weights: list[tuple[Any, Any, dict[str, float]]]):
         self.G_new.add_edges_from(weights)
         nx.set_node_attributes(self.G_new, self.model.status, name='infected')
         nx.set_node_attributes(self.G_new, self.model.initial_status, name='source')
