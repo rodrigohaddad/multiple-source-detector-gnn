@@ -1,8 +1,9 @@
 [
   {
-    "file_path": "networks/powergrid.edgelist.txt",
+    "file_path": "data/networks/powergrid.edgelist.txt",
+    "overwrite_previous": false,
     "name": "powergrid",
-    "model": "SIR",
+    "model": "SI",
     "n_iter": 200,
     "params": {
       "beta": 0.001,
@@ -12,6 +13,17 @@
   },
   {
     "name": "randba",
+    "overwrite_previous": false,
+    "model": "SI",
+    "n_iter": 10,
+    "params": {
+      "beta": 0.001,
+      "gamma": 0.01
+    }
+  },
+  {
+    "name": "randbatest",
+    "overwrite_previous": false,
     "model": "SI",
     "n_iter": 10,
     "params": {

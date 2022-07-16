@@ -31,7 +31,7 @@ class SAGE(nn.Module):
 
     def full_forward(self, x, edge_index, edge_weight):
         for i, conv in enumerate(self.convs):
-            x = conv(x, edge_index, edge_weight)
+            x = conv(x.to(torch.float), edge_index, edge_weight)
             if i != self.num_layers - 1:
                 x = x.relu()
                 x = F.dropout(x, p=0.5, training=self.training)
@@ -51,11 +51,16 @@ class SAGE(nn.Module):
                 adjs = [adj.to(device) for adj in adjs]
                 optimizer.zero_grad()
 
+                # Escolha dos elementos que compõem o loss. Positivo devem ser "bons" exemplos, e negativos o contrário.
+                # Um bom exemplo seria um vizinho
+                # Aleatório que não é vizinho e nem vizinho de vizinho.
+                # Distribuição pode ser uma uniforme dos vértices que estão a distância >= 3
+
                 out = self(x[n_id], adjs, data.edge_weight)
                 out, pos_out, neg_out, _ = out.split(out.size(0) // 3)
 
-                pos_loss = F.logsigmoid((out * pos_out).sum(-1)).mean()
-                neg_loss = F.logsigmoid(-(out * neg_out).sum(-1)).mean()
+                pos_loss = F.logsigmoid(torch.inner(out, pos_out)).mean()
+                neg_loss = F.logsigmoid(-torch.inner(out, neg_out)).mean()
                 loss = -pos_loss - neg_loss
                 loss.backward()
                 optimizer.step()

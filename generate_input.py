@@ -1,12 +1,13 @@
+import os
+
 from utils.load_graph_config import load_config
 from infected_graph_factory.graph_creation import GraphFactory
 from infected_graph_factory.provision_graph import InfectedGraphProvision
-from graph_transformation.transformation import GraphTransform
 
 
 def main():
-    # configs = load_config()
-    configs = [load_config()[1]]
+    configs = load_config()
+    # configs = [load_config()[1]]
     for inf_config in configs:
         g_factory = GraphFactory(inf_config.file_path)
 
@@ -14,13 +15,12 @@ def main():
                                'Infected': g_factory.select_random_sources(),
                                'fraction_infected': 0.05})
 
-        g_inf = InfectedGraphProvision(graph=g_factory.G,
-                                       infection_config=inf_config)
+        existent_graph = inf_config.name in [i.split('-')[0] for i in os.listdir('data/infected_graph')]
+        if not inf_config.overwrite_previous and existent_graph:
+            continue
 
-        GraphTransform(g_inf=g_inf,
-                       k=3,
-                       min_weight=0.3,
-                       alpha_weight=.5)
+        InfectedGraphProvision(graph=g_factory.G,
+                               infection_config=inf_config)
 
 
 if __name__ == '__main__':

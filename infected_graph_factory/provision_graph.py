@@ -10,8 +10,7 @@ MODELS = {'SI': ep.SIModel,
 class InfectedGraphProvision:
     def __init__(self,
                  graph,
-                 infection_config,
-                 ):
+                 infection_config):
         self.G = graph
         self.infection_config = infection_config
 
