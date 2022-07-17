@@ -13,7 +13,7 @@ DEVICE = torch.device('cpu' if torch.cuda.is_available() else 'cpu')
 
 def main():
     model = SAGE(in_channels=1,  # data.num_node_features
-                 hidden_channels=10,
+                 hidden_channels=64,
                  num_layers=3)
     model = model.to(DEVICE)
 

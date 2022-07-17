@@ -3,6 +3,7 @@ import pickle
 
 from sklearn import svm
 from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score
 import torch
 
 EMBEDDING_DIR = 'data/embedding'
@@ -20,9 +21,9 @@ def main():
         emb = pickle.load(open(file, 'rb'))
         inf_model = pickle.load(open(f'{INFECTION_DIR}/{filename.split("-")[0]}-infected.pickle', 'rb'))
 
-        emb = torch.column_stack((emb, torch.Tensor(list(inf_model.model.initial_status.values()))))
+        emb = torch.column_stack((emb, torch.Tensor(list(inf_model.model.status.values()))))
 
-        sources = torch.concat((sources, torch.Tensor(list(inf_model.model.status.values()))))
+        sources = torch.concat((sources, torch.Tensor(list(inf_model.model.initial_status.values()))))
         conj_emb = torch.concat((conj_emb, emb))
         print("")
 
@@ -31,7 +32,7 @@ def main():
     clf = svm.SVC()
     clf.fit(x_train, y_train)
     pred = clf.predict(x_test)
-    print(pred)
+    print(f'Acc: {accuracy_score(pred, y_test)}')
 
 
 if __name__ == '__main__':
