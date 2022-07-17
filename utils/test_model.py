@@ -12,5 +12,5 @@ def test(model, data):
 
     out = model.full_forward(data.x, data.edge_index, data.edge_weight).cpu()
     # _, out = model(data.x, data.edge_index, data.edge_weight)
-    acc = accuracy(out.argmax(dim=1)[data.test_mask], data.y[data.test_mask])
-    return acc
+    # acc = accuracy(out.argmax(dim=1)[data.test_mask], data.y[data.test_mask])
+    return out
