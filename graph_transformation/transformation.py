@@ -46,7 +46,7 @@ class GraphTransform:
         self.alpha_weight = alpha_weight
 
         self.shortest_paths = nx.shortest_path_length(self.G)
-        self._calculate_infection()
+        self._calculate_node_metrics()
         self._create_new_graph(self._calculate_nodes_weights())
 
         print(f'C. Components: {nx.number_connected_components(self.G_new)}')
@@ -61,7 +61,7 @@ class GraphTransform:
             n_neighbors += 1
         return len(self.G[v]) and n_inf / n_neighbors or 0
 
-    def _calculate_infection(self):
+    def _calculate_node_metrics(self):
         for u, v_dict in self.shortest_paths:
             alpha_numerator = [0] * self.k
             alpha_denominator = [0] * self.k
