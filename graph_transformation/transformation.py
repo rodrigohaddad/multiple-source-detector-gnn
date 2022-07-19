@@ -67,7 +67,7 @@ class GraphTransform:
             alpha_denominator = [0] * self.k
             neighbors_infection = [0] * self.k
             for v, distance in v_dict.items():
-                if distance == 0:
+                if distance == 0 or self.nodes_metrics.get(v):
                     continue
                 if distance >= self.k:
                     break
@@ -102,7 +102,7 @@ class GraphTransform:
 
             self.all_weights[u] = {**self.all_weights.get(u, {}), **{v: weight}}
 
-            if weight >= self.min_weight and self.G[u].get(v) is not None:
+            if weight >= self.min_weight and not self.G[u].get(v):
                 # Stop infecting when reaching desired infection percentage
                 weights.append((u, v, {'edge_weight': weight, 'weight': weight}))
 
