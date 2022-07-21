@@ -13,7 +13,8 @@ INFECTION_DIR = 'data/infected_graph'
 def main():
     conj_emb = torch.Tensor()
     sources = torch.Tensor()
-    for filename in os.listdir(EMBEDDING_DIR):
+    # for filename in os.listdir(EMBEDDING_DIR):
+    for filename in [os.listdir(EMBEDDING_DIR)[-1]]:
         file = os.path.join(EMBEDDING_DIR, filename)
         if not os.path.isfile(file):
             continue

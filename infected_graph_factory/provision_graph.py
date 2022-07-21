@@ -10,9 +10,10 @@ MODELS = {'SI': ep.SIModel,
 class InfectedGraphProvision:
     def __init__(self,
                  graph,
-                 infection_config):
+                 graph_config):
         self.G = graph
-        self.infection_config = infection_config
+        self.graph_config = graph_config
+        infection_config = graph_config.infection_config
 
         self.model = MODELS[infection_config.model](self.G)
         self.config = mc.Configuration()
@@ -22,7 +23,7 @@ class InfectedGraphProvision:
         self._infect_graph(infection_config.n_iter)
 
         save_to_pickle(self, 'infected_graph',
-                       f'{self.infection_config.name}-infected')
+                       f'{graph_config.name}-infected')
 
     def _add_model_params(self, params):
         for param_name, param_value in params.items():

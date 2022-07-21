@@ -1,47 +1,54 @@
 [
   {
-    "file_path": "data/networks/powergrid.edgelist.txt",
+    "name": "randba1",
+    "graph_type": "ba",
     "overwrite_previous": false,
-    "name": "powergrid",
-    "model": "SI",
-    "n_iter": 200,
-    "params": {
-      "beta": 0.001,
-      "gamma": 0.01,
-      "fraction_infected": 0.05
+    "infection_config" : {
+      "model": "SI",
+      "n_iter": 60,
+      "params": {
+        "beta": 0.1,
+        "gamma": 0.01
+      }
     }
   },
   {
-    "name": "randba",
+    "name": "randba2",
     "graph_type": "ba",
     "overwrite_previous": false,
-    "model": "SI",
-    "n_iter": 50,
-    "params": {
-      "beta": 0.1,
-      "gamma": 0.01
+    "infection_config" : {
+      "model": "SI",
+      "n_iter": 50,
+      "params": {
+        "beta": 0.1,
+        "gamma": 0.01
+      }
     }
   },
   {
-    "name": "randbatest",
+    "name": "randba3",
     "graph_type": "ba",
     "overwrite_previous": false,
-    "model": "SI",
-    "n_iter": 50,
-    "params": {
-      "beta": 0.1,
-      "gamma": 0.01
+    "infection_config" : {
+      "model": "SI",
+      "n_iter": 50,
+      "params": {
+        "beta": 0.1,
+        "gamma": 0.01
+      }
     }
   },
   {
     "name": "randertest",
     "graph_type": "er",
     "overwrite_previous": false,
-    "model": "SI",
-    "n_iter": 50,
-    "params": {
-      "beta": 0.1,
-      "gamma": 0.01
+    "infection_config" : {
+      "model": "SI",
+      "n_iter": 50,
+      "params": {
+        "beta": 0.1,
+        "gamma": 0.01
+      }
     }
   }
 ]

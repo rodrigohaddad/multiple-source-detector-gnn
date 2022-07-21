@@ -51,7 +51,7 @@ class GraphTransform:
 
         print(f'C. Components: {nx.number_connected_components(self.G_new)}')
         save_to_pickle(GGraph(self.G_new), 'graph_transformed',
-                       f'{g_inf.infection_config.name}-transformed')
+                       f'{g_inf.graph_config.name}-transformed')
 
     def _calculate_neighbourhood_infection(self, v: int) -> float:
         n_inf = 0
