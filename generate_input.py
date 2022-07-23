@@ -11,8 +11,7 @@ def main():
     for graph_config in configs:
         g_factory = GraphFactory(**graph_config.__dict__)
 
-        graph_config.set_params({'Infected': g_factory.select_random_sources(),
-                                 'fraction_infected': 0.05})
+        graph_config.set_params({'Infected': g_factory.select_random_sources()})
 
         existent_graph = graph_config.name in [i.split('-')[0] for i in os.listdir('data/infected_graph')]
         if not graph_config.overwrite_previous and existent_graph:

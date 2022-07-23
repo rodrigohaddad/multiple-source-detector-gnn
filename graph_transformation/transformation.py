@@ -19,7 +19,7 @@ class GGraph:
         self.G = g
         self.pyG = from_networkx(G=g,
                                  # group_node_attrs=['source'],
-                                 group_node_attrs=['infected'],
+                                 group_node_attrs=['infected', 'eta', 'alpha'],
                                  # group_edge_attrs=['weight']
                                  ).to(device=DEVICE)
 
@@ -35,7 +35,8 @@ class WeightConfig:
 
 
 class GraphTransform:
-    nodes_metrics = dict()
+    eta_dict = dict()
+    alpha_dict = dict()
     G_new = nx.Graph()
 
     def __init__(self, g_inf, k: int, min_weight: float, alpha_weight: float):
@@ -67,7 +68,7 @@ class GraphTransform:
             alpha_denominator = [0] * self.k
             neighbors_infection = [0] * self.k
             for v, distance in v_dict.items():
-                if distance == 0 or self.nodes_metrics.get(v):
+                if distance == 0:
                     continue
                 if distance >= self.k:
                     break
@@ -77,16 +78,18 @@ class GraphTransform:
                 n_inf = self._calculate_neighbourhood_infection(v)
                 neighbors_infection[distance] += n_inf
 
-            self.nodes_metrics[u] = NodeMetrics(neighbors_infection,
-                                                alpha_numerator,
-                                                alpha_denominator)
+            nm = NodeMetrics(neighbors_infection,
+                             alpha_numerator,
+                             alpha_denominator)
+            self.eta_dict[u] = nm.eta
+            self.alpha_dict[u] = nm.alpha
 
     def _calculate_weight(self, ring_index: float, neighbor_index: float) -> float:
         return self.alpha_weight * ring_index + (1 - self.alpha_weight) * neighbor_index
 
-    def _calculate_sum_of_difference_infections(self, u_metrics, v_metrics) -> tuple[float, float]:
+    def _calculate_sum_of_difference_infections(self, u, v) -> tuple[float, float]:
         f_uv, g_uv = 0, 0
-        for u_eta, u_alpha, v_eta, v_alpha in (u_metrics.eta, u_metrics.alpha, v_metrics.eta, v_metrics.alpha):
+        for u_eta, u_alpha, v_eta, v_alpha in (self.eta_dict[u], self.alpha_dict[u], self.eta_dict[v], self.alpha_dict[v]):
             f_uv += abs(u_alpha - v_alpha)
             g_uv += abs(u_eta - v_eta)
         return 1 - f_uv / self.k, 1 - g_uv / self.k
@@ -94,10 +97,9 @@ class GraphTransform:
     def _calculate_nodes_weights(self) -> list[tuple[Any, Any, dict[str, float]]]:
         weights = []
         self.all_weights = dict()
-        nodes_address = list(itertools.combinations(self.nodes_metrics.keys(), 2))
+        nodes_address = list(itertools.combinations(self.eta_dict.keys(), 2))
         for u, v in nodes_address:
-            f_uv, g_uv = self._calculate_sum_of_difference_infections(self.nodes_metrics[u],
-                                                                      self.nodes_metrics[v])
+            f_uv, g_uv = self._calculate_sum_of_difference_infections(u, v)
             weight = self._calculate_weight(f_uv, g_uv)
 
             self.all_weights[u] = {**self.all_weights.get(u, {}), **{v: weight}}
@@ -111,4 +113,6 @@ class GraphTransform:
     def _create_new_graph(self, weights: list[tuple[Any, Any, dict[str, float]]]):
         self.G_new.add_edges_from(weights)
         nx.set_node_attributes(self.G_new, self.model.status, name='infected')
+        nx.set_node_attributes(self.G_new, self.eta_dict, name='eta')
+        nx.set_node_attributes(self.G_new, self.alpha_dict, name='alpha')
         nx.set_node_attributes(self.G_new, self.model.initial_status, name='source')

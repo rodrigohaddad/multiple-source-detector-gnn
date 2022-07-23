@@ -20,7 +20,7 @@ class InfectedGraphProvision:
         self.trends = None
 
         self._add_model_params(infection_config.params)
-        self._infect_graph(infection_config.n_iter)
+        self._infect_graph(infection_config.infected_fraction)
 
         save_to_pickle(self, 'infected_graph',
                        f'{graph_config.name}-infected')
@@ -28,8 +28,21 @@ class InfectedGraphProvision:
     def _add_model_params(self, params):
         for param_name, param_value in params.items():
             self.config.add_model_parameter(param_name, param_value)
+            if param_name == 'Infected':
+                self.config.add_model_initial_configuration('Infected', params['Infected'])
         self.model.set_initial_status(self.config)
 
-    def _infect_graph(self, n_iter):
-        iterations = self.model.iteration_bunch(n_iter)
-        self.trends = self.model.build_trends(iterations)
+    def _infect_graph(self, infected_fraction):
+        # iterations = self.model.iteration_bunch(1)
+        # self.trends = self.model.build_trends(iterations)
+        size = len(self.model.status)
+        end_iterations = False
+
+        while not end_iterations:
+            iterations = self.model.iteration()
+            # if iterations['iteration'] != 0 and iterations['iteration'] % 1 == 0:
+            total_infected = sum(self.model.status.values())
+            if total_infected / size >= infected_fraction:
+                print(f'Inf. {total_infected / size}')
+                end_iterations = True
+        self.trends = self.model.build_trends([iterations])

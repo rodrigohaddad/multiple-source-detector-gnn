@@ -2,12 +2,13 @@
   {
     "name": "randba1",
     "graph_type": "ba",
+    "n_nodes": 1000,
     "overwrite_previous": false,
     "infection_config" : {
       "model": "SI",
-      "n_iter": 60,
+      "infected_fraction": 0.5,
       "params": {
-        "beta": 0.1,
+        "beta": 0.01,
         "gamma": 0.01
       }
     }
@@ -15,12 +16,13 @@
   {
     "name": "randba2",
     "graph_type": "ba",
+    "n_nodes": 1000,
     "overwrite_previous": false,
     "infection_config" : {
       "model": "SI",
-      "n_iter": 50,
+      "infected_fraction": 0.5,
       "params": {
-        "beta": 0.1,
+        "beta": 0.01,
         "gamma": 0.01
       }
     }
@@ -28,12 +30,13 @@
   {
     "name": "randba3",
     "graph_type": "ba",
+    "n_nodes": 1000,
     "overwrite_previous": false,
     "infection_config" : {
       "model": "SI",
-      "n_iter": 50,
+      "infected_fraction": 0.5,
       "params": {
-        "beta": 0.1,
+        "beta": 0.01,
         "gamma": 0.01
       }
     }
@@ -41,12 +44,13 @@
   {
     "name": "randertest",
     "graph_type": "er",
+    "n_nodes": 1000,
     "overwrite_previous": false,
     "infection_config" : {
       "model": "SI",
-      "n_iter": 50,
+      "infected_fraction": 0.5,
       "params": {
-        "beta": 0.1,
+        "beta": 0.01,
         "gamma": 0.01
       }
     }
