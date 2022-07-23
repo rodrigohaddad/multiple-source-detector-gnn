@@ -19,7 +19,8 @@ class GGraph:
         self.G = g
         self.pyG = from_networkx(G=g,
                                  # group_node_attrs=['source'],
-                                 group_node_attrs=['infected', 'eta', 'alpha'],
+                                 group_node_attrs=['infected']
+                                 # , 'eta', 'alpha'],
                                  # group_edge_attrs=['weight']
                                  ).to(device=DEVICE)
 

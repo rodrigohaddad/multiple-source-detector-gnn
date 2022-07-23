@@ -12,7 +12,7 @@ def main():
         g_inf = pickle.load(open(file, 'rb'))
         GraphTransform(g_inf=g_inf,
                        k=3,
-                       min_weight=0.3,
+                       min_weight=0.45,
                        alpha_weight=.5)
 
 
