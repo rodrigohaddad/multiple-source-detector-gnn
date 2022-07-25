@@ -1,5 +1,6 @@
 import ndlib.models.epidemics as ep
 import ndlib.models.ModelConfig as mc
+import random
 
 from utils.save_to_pickle import save_to_pickle
 
@@ -8,6 +9,8 @@ MODELS = {'SI': ep.SIModel,
 
 
 class InfectedGraphProvision:
+    trends = None
+
     def __init__(self,
                  graph,
                  graph_config):
@@ -17,10 +20,12 @@ class InfectedGraphProvision:
 
         self.model = MODELS[infection_config.model](self.G)
         self.config = mc.Configuration()
-        self.trends = None
 
-        self._add_model_params(infection_config.params)
-        self._infect_graph(infection_config.infected_fraction)
+        sources = self._select_random_sources(infection_config.n_sources)
+
+        self._add_model_params({**infection_config.params,
+                               **{'Infected': sources}})
+        self._infect_graph(infection_config.max_infected_fraction)
 
         save_to_pickle(self, 'infected_graph',
                        f'{graph_config.name}-infected')
@@ -46,3 +51,6 @@ class InfectedGraphProvision:
                 print(f'Inf. {total_infected / size}')
                 end_iterations = True
         self.trends = self.model.build_trends([iterations])
+
+    def _select_random_sources(self, n_sources):
+        return random.sample(list(self.G.nodes()), n_sources)
