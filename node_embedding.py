@@ -2,7 +2,7 @@ import os
 import pickle
 
 from utils.save_to_pickle import save_to_pickle
-from utils.test_model import test
+from utils.test_model import test_embedding
 
 MODEL = 'data/model'
 GRAPH_TRANSFORMED = 'data/graph_transformed'
@@ -20,7 +20,7 @@ def main():
         data = pyg_graph.pyG
 
         model = pickle.load(open(model_filename, 'rb'))
-        embedding = test(model, data)
+        embedding = test_embedding(model, data)
 
         # print(f'\nGraphSAGE test accuracy: {test(model, data)*100:.2f}%\n')
 

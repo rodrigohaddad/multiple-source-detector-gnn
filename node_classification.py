@@ -1,11 +1,10 @@
 import os
-import pickle
-
 from sklearn import svm
 import torch
 
-from constants import EMBEDDING_DIR, INFECTED_DIR
+from constants import EMBEDDING_DIR
 from utils.save_to_pickle import save_to_pickle
+from utils.test_model import concatenate_sources
 
 
 def main():
@@ -16,13 +15,7 @@ def main():
         if not os.path.isfile(file):
             continue
 
-        emb = pickle.load(open(file, 'rb'))
-        inf_model = pickle.load(open(f'{INFECTED_DIR}/{filename.split("-")[0]}-infected.pickle', 'rb'))
-
-        emb = torch.column_stack((emb, torch.Tensor(list(inf_model.model.status.values()))))
-
-        sources = torch.concat((sources, torch.Tensor(list(inf_model.model.initial_status.values()))))
-        conj_emb = torch.concat((conj_emb, emb))
+        conj_emb, sources = concatenate_sources(file, filename, sources, conj_emb)
 
     # x_train, x_test, y_train, y_test = train_test_split(conj_emb, sources, test_size=0, random_state=2)
     clf = svm.SVC()
