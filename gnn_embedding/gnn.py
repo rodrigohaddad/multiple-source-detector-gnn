@@ -36,6 +36,14 @@ class SAGE(nn.Module):
                 x = F.dropout(x, p=0.5, training=self.training)
         return x
 
+    @staticmethod
+    def loss_fn(out):
+        out, pos_out, neg_out, _ = out.split(out.size(0) // 3)
+
+        pos_loss = F.logsigmoid(torch.inner(out, pos_out)).mean()
+        neg_loss = F.logsigmoid(-torch.inner(out, neg_out)).mean()
+        return -pos_loss - neg_loss
+
     def fit(self, data, device, epochs, train_loader):
         optimizer = torch.optim.Adam(self.parameters(), lr=0.01)
         x, edge_index = data.x.to(device), data.edge_index.to(device)
@@ -56,19 +64,13 @@ class SAGE(nn.Module):
                 # Distribuição pode ser uma uniforme dos vértices que estão a distância >= 3
 
                 out = self(x[n_id], adjs, data.edge_weight)
-                out, pos_out, neg_out, _ = out.split(out.size(0) // 3)
-
-                pos_loss = F.logsigmoid(torch.inner(out, pos_out)).mean()
-                neg_loss = F.logsigmoid(-torch.inner(out, neg_out)).mean()
-                loss = -pos_loss - neg_loss
+                loss = self.loss_fn(out)
                 loss.backward()
                 optimizer.step()
 
                 total_loss += float(loss) * out.size(0)
                 val += torch.sum(torch.abs(out))
 
-
-            # Print metrics every x epochs
             if epoch % 10 == 0:
                 print(total_loss / data.num_nodes)
                 print(f'Epoch {epoch:>3} | Train Loss: {total_loss / len(data):.3f}')

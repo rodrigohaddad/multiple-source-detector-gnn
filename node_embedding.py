@@ -25,7 +25,6 @@ def main():
         # print(f'\nGraphSAGE test accuracy: {test(model, data)*100:.2f}%\n')
 
         save_to_pickle(embedding, 'embedding', f'{filename.split("-")[0]}-embedding')
-        print("")
 
 
 if __name__ == '__main__':

@@ -1,14 +1,13 @@
 import os
 import pickle
 
+from constants import INFECTED_DIR
 from graph_transformation.transformation import GraphTransform
-
-INFECTED_PATH = 'data/infected_graph'
 
 
 def main():
-    for filename in os.listdir(INFECTED_PATH):
-        file = os.path.join(INFECTED_PATH, filename)
+    for filename in os.listdir(INFECTED_DIR):
+        file = os.path.join(INFECTED_DIR, filename)
         g_inf = pickle.load(open(file, 'rb'))
         GraphTransform(g_inf=g_inf,
                        k=3,

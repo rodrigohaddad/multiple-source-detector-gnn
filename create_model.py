@@ -3,11 +3,11 @@ import pickle
 import torch
 from torch_geometric.loader import NeighborSampler
 
-from gnn_embedding.gnn_3 import SAGE
+from constants import TRANSFORMED_DIR, EMBEDDING_DIR
+from gnn_embedding.gnn import SAGE
 from utils.save_to_pickle import save_to_pickle
 
-TRANSFORMED_GRAPH = 'data/graph_transformed'
-EMBEDDING = 'data/embedding'
+
 DEVICE = torch.device('cpu' if torch.cuda.is_available() else 'cpu')
 
 
@@ -20,12 +20,12 @@ def main():
                      num_layers=3)
     model = model.to(DEVICE)
 
-    for filename in os.listdir(TRANSFORMED_GRAPH):
-        file = os.path.join(TRANSFORMED_GRAPH, filename)
+    for filename in os.listdir(TRANSFORMED_DIR):
+        file = os.path.join(TRANSFORMED_DIR, filename)
         if not os.path.isfile(file):
             continue
 
-        ana_dir = os.path.join(EMBEDDING)
+        ana_dir = os.path.join(EMBEDDING_DIR)
         if not os.path.exists(ana_dir):
             os.mkdir(ana_dir)
 
