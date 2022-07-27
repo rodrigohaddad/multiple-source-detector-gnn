@@ -2,13 +2,17 @@ import itertools
 from typing import Any
 
 import networkx as nx
+import concurrent.futures
+import torch
+import numpy as np
+
 from dataclasses import dataclass
 from torch_geometric.utils import from_networkx
-import torch
-
 from create_model import DEVICE
 from graph_transformation.node_metrics import NodeMetrics
 from utils.save_to_pickle import save_to_pickle
+from datetime import datetime
+
 
 DEVICE = torch.device('cpu' if torch.cuda.is_available() else 'cpu')
 
@@ -19,7 +23,7 @@ class GGraph:
         self.G = g
         self.pyG = from_networkx(G=g,
                                  # group_node_attrs=['source'],
-                                 group_node_attrs=['infected', 'eta', 'alpha'],
+                                 group_node_attrs=['infected', 'eta', 'alpha']
                                  # group_edge_attrs=['weight']
                                  ).to(device=DEVICE)
 
@@ -38,6 +42,7 @@ class GraphTransform:
     eta_dict = dict()
     alpha_dict = dict()
     G_new = nx.Graph()
+    threads = 5
 
     def __init__(self, g_inf, k: int, min_weight: float, alpha_weight: float):
         self.G = g_inf.G
@@ -46,8 +51,7 @@ class GraphTransform:
         self.min_weight = min_weight
         self.alpha_weight = alpha_weight
 
-        self.shortest_paths = nx.shortest_path_length(self.G)
-        self._calculate_node_metrics()
+        self.multithreading_bfs(self._split_nodes())
         self._create_new_graph(self._calculate_nodes_weights())
 
         print(f'C. Components: {nx.number_connected_components(self.G_new)}')
@@ -62,34 +66,69 @@ class GraphTransform:
             n_neighbors += 1
         return len(self.G[v]) and n_inf / n_neighbors or 0
 
-    def _calculate_node_metrics(self):
-        for u, v_dict in self.shortest_paths:
+    def multithreading_bfs(self, nodes_split):
+        print(datetime.now())
+        # for nodes in nodes_split:
+        #     eta, alpha = self.bfs(nodes)
+        #     self.eta_dict = {**self.eta_dict, **eta}
+        #     self.alpha_dict = {**self.eta_dict, **alpha}
+
+        with concurrent.futures.ProcessPoolExecutor() as executor:
+            futures = []
+            for nodes in nodes_split:
+                futures.append(executor.submit(self.bfs, nodes=nodes))
+            for future in concurrent.futures.as_completed(futures):
+                self.eta_dict = {**self.eta_dict, **future.result()[0]}
+                self.alpha_dict = {**self.eta_dict, **future.result()[1]}
+        print(datetime.now())
+
+    def _split_nodes(self):
+        return np.array_split(self.G.nodes, self.threads)
+
+    def bfs(self, nodes):
+        eta_dict = dict()
+        alpha_dict = dict()
+        for node in nodes:
             alpha_numerator = [0] * self.k
             alpha_denominator = [0] * self.k
             neighbors_infection = [0] * self.k
-            for v, distance in v_dict.items():
-                if distance == 0:
-                    continue
-                if distance >= self.k:
-                    break
 
-                alpha_numerator[distance] += self.model.status[v]
-                alpha_denominator[distance] += 1
-                n_inf = self._calculate_neighbourhood_infection(v)
-                neighbors_infection[distance] += n_inf
+            distance = 0
+            visited = [False] * self.G.size()
+            queue = []
+
+            visited[node] = True
+            queue.append((node, distance))
+            while queue:
+                s, distance = queue.pop(0)
+                if distance == self.k:
+                    break
+                # print(s, end=" ")
+                for neighbour in self.G.neighbors(s):
+                    if not visited[neighbour]:
+                        visited[neighbour] = True
+                        queue.append((neighbour, distance + 1))
+
+                        alpha_numerator[distance] += self.model.status[neighbour]
+                        alpha_denominator[distance] += 1
+                        n_inf = self._calculate_neighbourhood_infection(neighbour)
+                        neighbors_infection[distance] += n_inf
 
             nm = NodeMetrics(neighbors_infection,
                              alpha_numerator,
                              alpha_denominator)
-            self.eta_dict[u] = nm.eta
-            self.alpha_dict[u] = nm.alpha
+
+            eta_dict[node] = nm.eta
+            alpha_dict[node] = nm.alpha
+        return eta_dict, alpha_dict
 
     def _calculate_weight(self, ring_index: float, neighbor_index: float) -> float:
         return self.alpha_weight * ring_index + (1 - self.alpha_weight) * neighbor_index
 
     def _calculate_sum_of_difference_infections(self, u, v) -> tuple[float, float]:
         f_uv, g_uv = 0, 0
-        for u_eta, u_alpha, v_eta, v_alpha in (self.eta_dict[u], self.alpha_dict[u], self.eta_dict[v], self.alpha_dict[v]):
+        for u_eta, u_alpha, v_eta, v_alpha in (
+                self.eta_dict[u], self.alpha_dict[u], self.eta_dict[v], self.alpha_dict[v]):
             f_uv += abs(u_alpha - v_alpha)
             g_uv += abs(u_eta - v_eta)
         return 1 - f_uv / self.k, 1 - g_uv / self.k
@@ -105,7 +144,6 @@ class GraphTransform:
             self.all_weights[u] = {**self.all_weights.get(u, {}), **{v: weight}}
 
             if weight >= self.min_weight and not self.G[u].get(v):
-                # Stop infecting when reaching desired infection percentage
                 weights.append((u, v, {'edge_weight': weight, 'weight': weight}))
 
         return weights
@@ -113,6 +151,6 @@ class GraphTransform:
     def _create_new_graph(self, weights: list[tuple[Any, Any, dict[str, float]]]):
         self.G_new.add_edges_from(weights)
         nx.set_node_attributes(self.G_new, self.model.status, name='infected')
+        nx.set_node_attributes(self.G_new, self.model.initial_status, name='source')
         nx.set_node_attributes(self.G_new, self.eta_dict, name='eta')
         nx.set_node_attributes(self.G_new, self.alpha_dict, name='alpha')
-        nx.set_node_attributes(self.G_new, self.model.initial_status, name='source')
