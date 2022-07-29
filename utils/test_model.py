@@ -20,7 +20,7 @@ def test_embedding(model, data):
 
 
 def concatenate_sources(file, filename, sources, conj_emb, emb=None):
-    if not emb:
+    if emb is None:
         emb = pickle.load(open(file, 'rb'))
     inf_model = pickle.load(open(f'{INFECTED_DIR}/{filename.split("-")[0]}-infected.pickle', 'rb'))
 

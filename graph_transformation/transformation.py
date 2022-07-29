@@ -127,7 +127,7 @@ class GraphTransform:
 
     def _calculate_sum_of_difference_infections(self, u, v) -> tuple[float, float]:
         f_uv, g_uv = 0, 0
-        for u_eta, u_alpha, v_eta, v_alpha in (
+        for u_eta, u_alpha, v_eta, v_alpha in zip(
                 self.eta_dict[u], self.alpha_dict[u], self.eta_dict[v], self.alpha_dict[v]):
             f_uv += abs(u_alpha - v_alpha)
             g_uv += abs(u_eta - v_eta)

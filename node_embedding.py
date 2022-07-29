@@ -9,8 +9,6 @@ GRAPH_TRANSFORMED = 'data/graph_transformed'
 
 
 def main():
-    model_filename = os.listdir(MODEL)
-    model_filename = os.path.join(MODEL, model_filename[0])
     for filename in os.listdir(GRAPH_TRANSFORMED):
         file = os.path.join(GRAPH_TRANSFORMED, filename)
         if not os.path.isfile(file):
@@ -19,10 +17,10 @@ def main():
         pyg_graph = pickle.load(open(file, 'rb'))
         data = pyg_graph.pyG
 
-        model = pickle.load(open(model_filename, 'rb'))
+        model = pickle.load(open('data/model/sagemodel.pickle', 'rb'))
         embedding = test_embedding(model, data)
 
-        # print(f'\nGraphSAGE test accuracy: {test(model, data)*100:.2f}%\n')
+        # print(f'\nGraphSAGE test accuracy: {acc*100:.2f}%\n')
 
         save_to_pickle(embedding, 'embedding', f'{filename.split("-")[0]}-embedding')
 

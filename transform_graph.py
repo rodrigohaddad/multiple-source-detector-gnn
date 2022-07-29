@@ -6,11 +6,11 @@ from graph_transformation.transformation import GraphTransform
 
 
 def main():
-    for filename in [os.listdir(INFECTED_DIR)[0]]:
+    for filename in os.listdir(INFECTED_DIR):
         file = os.path.join(INFECTED_DIR, filename)
         g_inf = pickle.load(open(file, 'rb'))
         GraphTransform(g_inf=g_inf,
-                       k=3,
+                       k=2,
                        min_weight=0.45,
                        alpha_weight=.5)
 

@@ -15,7 +15,7 @@ def main():
     try:
         model = pickle.load(open('data/model/sagemodel.pickle', 'rb'))
     except:
-        model = SAGE(in_channels=9,  # data.num_node_features
+        model = SAGE(in_channels=7,  # data.num_node_features
                      hidden_channels=64,
                      num_layers=3)
     model = model.to(DEVICE)

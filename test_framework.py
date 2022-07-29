@@ -4,7 +4,7 @@ import pickle
 import torch
 from sklearn.metrics import accuracy_score
 
-from constants import MODEL_DIR, TRANSFORMED_DIR
+from constants import MODEL_DIR, TRANSFORMED_DIR, TRANSFORMED_TEST_DIR
 from utils.test_model import test_embedding, concatenate_sources
 
 
