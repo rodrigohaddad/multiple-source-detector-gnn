@@ -33,7 +33,7 @@ def main():
         pyg_graph = pickle.load(open(file, 'rb'))
         data = pyg_graph.pyG
 
-        train_loader = NeighborSampler(data.edge_index, sizes=[20, 15, 10], batch_size=256,
+        train_loader = NeighborSampler(data.edge_index, sizes=[20, 15, 10], batch_size=64,
                                        shuffle=True, num_nodes=data.num_nodes)
 
         model.fit(data, DEVICE, 50, train_loader)
