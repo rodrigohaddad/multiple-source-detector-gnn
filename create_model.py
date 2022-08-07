@@ -1,12 +1,12 @@
 import os
 import pickle
 import torch
-from torch_geometric.loader import NeighborSampler
+from torch_geometric.loader import NeighborSampler, NeighborLoader, DataLoader
 
 from constants import TRANSFORMED_DIR, EMBEDDING_DIR
 from gnn_embedding.gnn import SAGE
+from gnn_embedding.sampler import PosNegSampler
 from utils.save_to_pickle import save_to_pickle
-
 
 DEVICE = torch.device('cpu' if torch.cuda.is_available() else 'cpu')
 
@@ -33,8 +33,12 @@ def main():
         pyg_graph = pickle.load(open(file, 'rb'))
         data = pyg_graph.pyG
 
-        train_loader = NeighborSampler(data.edge_index, sizes=[20, 15, 10], batch_size=64,
-                                       shuffle=True, num_nodes=data.num_nodes)
+        train_loader = PosNegSampler(data.edge_index, sizes=[7, 7, 7], batch_size=20,
+                                     shuffle=True, num_nodes=data.num_nodes)
+
+        # data.n_id = torch.arange(data.num_nodes)
+        # train_loader = NeighborLoader(data, num_neighbors=[20, 15, 10], batch_size=64,
+        #                               shuffle=True)
 
         model.fit(data, DEVICE, 50, train_loader)
 

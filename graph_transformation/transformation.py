@@ -68,11 +68,6 @@ class GraphTransform:
 
     def multithreading_bfs(self, nodes_split):
         print(datetime.now())
-        # for nodes in nodes_split:
-        #     eta, alpha = self.bfs(nodes)
-        #     self.eta_dict = {**self.eta_dict, **eta}
-        #     self.alpha_dict = {**self.eta_dict, **alpha}
-
         with concurrent.futures.ProcessPoolExecutor() as executor:
             futures = []
             for nodes in nodes_split:

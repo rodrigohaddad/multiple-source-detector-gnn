@@ -2,8 +2,6 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-from torch_geometric.nn import SAGEConv, GraphConv
-
 from gnn_embedding.operator import MsgConv
 
 
@@ -38,10 +36,10 @@ class SAGE(nn.Module):
 
     @staticmethod
     def loss_fn(out):
-        out, pos_out, neg_out, _ = out.split(out.size(0) // 3)
-
+        out, pos_out, neg_out = out.split(out.size(0) // 3)
         pos_loss = F.logsigmoid(torch.inner(out, pos_out)).mean()
         neg_loss = F.logsigmoid(-torch.inner(out, neg_out)).mean()
+
         return -pos_loss - neg_loss
 
     def fit(self, data, device, epochs, train_loader):
@@ -57,11 +55,6 @@ class SAGE(nn.Module):
                 # `adjs` holds a list of `(edge_index, e_id, size)` tuples.
                 adjs = [adj.to(device) for adj in adjs]
                 optimizer.zero_grad()
-
-                # Escolha dos elementos que compõem o loss. Positivos devem ser "bons" exemplos, e negativos o contrário.
-                # Um bom exemplo seria um vizinho
-                # Aleatório que não é vizinho e nem vizinho de vizinho.
-                # Distribuição pode ser uma uniforme dos vértices que estão a distância >= 3
 
                 out = self(x[n_id], adjs, data.edge_weight)
                 loss = self.loss_fn(out)
