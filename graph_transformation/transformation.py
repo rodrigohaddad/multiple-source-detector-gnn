@@ -1,41 +1,13 @@
 import itertools
-from typing import Any
+from typing import Any, List, Tuple
 
 import networkx as nx
 import concurrent.futures
-import torch
 import numpy as np
 
-from dataclasses import dataclass
-from torch_geometric.utils import from_networkx
-from create_model import DEVICE
 from graph_transformation.node_metrics import NodeMetrics
-from utils.save_to_pickle import save_to_pickle
+from utils.save_to_pickle import save_to_pickle, read_as_pyg_data
 from datetime import datetime
-
-
-DEVICE = torch.device('cpu' if torch.cuda.is_available() else 'cpu')
-
-
-@dataclass
-class GGraph:
-    def __init__(self, g):
-        self.G = g
-        self.pyG = from_networkx(G=g,
-                                 # group_node_attrs=['source'],
-                                 group_node_attrs=['infected', 'eta', 'alpha']
-                                 # group_edge_attrs=['weight']
-                                 ).to(device=DEVICE)
-
-
-class WeightConfig:
-    def __init__(self, u, v, weight):
-        self.u = u
-        self.v = v
-        self.weight = weight
-
-    def __call__(self, *args, **kwargs):
-        return self.u, self.v, {'edge_weight': self.weight, 'weight': self.weight}
 
 
 class GraphTransform:
@@ -54,8 +26,11 @@ class GraphTransform:
         self.multithreading_bfs(self._split_nodes())
         self._create_new_graph(self._calculate_nodes_weights())
 
+        print(f'Infected graph diameter: {nx.diameter(self.G)}')
+        print(f'Transformed graph diameter: {nx.diameter(self.G_new)}')
         print(f'C. Components: {nx.number_connected_components(self.G_new)}')
-        save_to_pickle(GGraph(self.G_new), 'graph_transformed',
+
+        save_to_pickle(read_as_pyg_data(self.G_new), 'graph_transformed',
                        f'{g_inf.graph_config.name}-transformed')
 
     def _calculate_neighbourhood_infection(self, v: int) -> float:
@@ -128,7 +103,7 @@ class GraphTransform:
             g_uv += abs(u_eta - v_eta)
         return 1 - f_uv / self.k, 1 - g_uv / self.k
 
-    def _calculate_nodes_weights(self) -> list[tuple[Any, Any, dict[str, float]]]:
+    def _calculate_nodes_weights(self) -> list[tuple[Any, Any, float]]:
         weights = []
         self.all_weights = dict()
         nodes_address = list(itertools.combinations(self.eta_dict.keys(), 2))
@@ -139,12 +114,13 @@ class GraphTransform:
             self.all_weights[u] = {**self.all_weights.get(u, {}), **{v: weight}}
 
             if weight >= self.min_weight and not self.G[u].get(v):
-                weights.append((u, v, {'edge_weight': weight, 'weight': weight}))
+                # weights.append((u, v, {'edge_weight': weight, 'weight': weight}))
+                weights.append((u, v, weight))
 
         return weights
 
     def _create_new_graph(self, weights: list[tuple[Any, Any, dict[str, float]]]):
-        self.G_new.add_edges_from(weights)
+        self.G_new.add_weighted_edges_from(weights, 'edge_weight')
         nx.set_node_attributes(self.G_new, self.model.status, name='infected')
         nx.set_node_attributes(self.G_new, self.model.initial_status, name='source')
         nx.set_node_attributes(self.G_new, self.eta_dict, name='eta')

@@ -1,7 +1,7 @@
 import os
 import pickle
 
-from constants import INFECTED_DIR
+from utils.constants import INFECTED_DIR
 from graph_transformation.transformation import GraphTransform
 
 
@@ -11,7 +11,7 @@ def main():
         g_inf = pickle.load(open(file, 'rb'))
         GraphTransform(g_inf=g_inf,
                        k=2,
-                       min_weight=0.45,
+                       min_weight=0.7,
                        alpha_weight=.5)
 
 

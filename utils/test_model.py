@@ -1,8 +1,7 @@
 import torch
 import pickle
-from torch_geometric.utils import accuracy
 
-from constants import INFECTED_DIR
+from utils.constants import INFECTED_DIR
 
 
 @torch.no_grad()
