@@ -119,7 +119,7 @@ class GraphTransform:
 
         return weights
 
-    def _create_new_graph(self, weights: list[tuple[Any, Any, dict[str, float]]]):
+    def _create_new_graph(self, weights: list[tuple[Any, Any, Any]]):
         self.G_new.add_weighted_edges_from(weights, 'edge_weight')
         nx.set_node_attributes(self.G_new, self.model.status, name='infected')
         nx.set_node_attributes(self.G_new, self.model.initial_status, name='source')
