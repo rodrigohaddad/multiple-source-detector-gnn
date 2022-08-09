@@ -10,7 +10,8 @@ class PosNegSampler(NeighborSampler):
         row, col, _ = self.adj_t.coo()
 
         pos_batch = random_walk(row, col, batch, walk_length=1,
-                                coalesced=False)[:, 1]
+                                coalesced=False)
+        pos_batch = pos_batch[:, 1]
 
         neg_batch = torch.randint(0, self.adj_t.size(1), (batch.numel(), ),
                                   dtype=torch.long)

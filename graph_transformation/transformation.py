@@ -26,9 +26,9 @@ class GraphTransform:
         self.multithreading_bfs(self._split_nodes())
         self._create_new_graph(self._calculate_nodes_weights())
 
-        print(f'Infected graph diameter: {nx.diameter(self.G)}')
-        print(f'Transformed graph diameter: {nx.diameter(self.G_new)}')
-        print(f'C. Components: {nx.number_connected_components(self.G_new)}')
+        # print(f'Infected graph diameter: {nx.diameter(self.G)}')
+        # print(f'Transformed graph diameter: {nx.diameter(self.G_new)}')
+        # print(f'C. Components: {nx.number_connected_components(self.G_new)}')
 
         save_to_pickle(read_as_pyg_data(self.G_new), 'graph_transformed',
                        f'{g_inf.graph_config.name}-transformed')
@@ -113,7 +113,7 @@ class GraphTransform:
 
             self.all_weights[u] = {**self.all_weights.get(u, {}), **{v: weight}}
 
-            if weight >= self.min_weight and not self.G[u].get(v):
+            if weight >= self.min_weight and self.G[u].get(v) is None:
                 # weights.append((u, v, {'edge_weight': weight, 'weight': weight}))
                 weights.append((u, v, weight))
 
