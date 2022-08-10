@@ -27,8 +27,8 @@ class GraphTransform:
         self._create_new_graph(self._calculate_nodes_weights())
 
         # print(f'Infected graph diameter: {nx.diameter(self.G)}')
-        # print(f'Transformed graph diameter: {nx.diameter(self.G_new)}')
-        # print(f'C. Components: {nx.number_connected_components(self.G_new)}')
+        print(f'Transformed graph diameter: {nx.diameter(self.G_new)}')
+        print(f'C. Components: {nx.number_connected_components(self.G_new)}\n')
 
         save_to_pickle(read_as_pyg_data(self.G_new), 'graph_transformed',
                        f'{g_inf.graph_config.name}-transformed')
@@ -42,7 +42,7 @@ class GraphTransform:
         return len(self.G[v]) and n_inf / n_neighbors or 0
 
     def multithreading_bfs(self, nodes_split):
-        print(datetime.now())
+        print(f"Before calculating metrics {datetime.now()}")
         with concurrent.futures.ProcessPoolExecutor() as executor:
             futures = []
             for nodes in nodes_split:
@@ -50,7 +50,7 @@ class GraphTransform:
             for future in concurrent.futures.as_completed(futures):
                 self.eta_dict = {**self.eta_dict, **future.result()[0]}
                 self.alpha_dict = {**self.eta_dict, **future.result()[1]}
-        print(datetime.now())
+        print(f"After calculating metrics {datetime.now()}")
 
     def _split_nodes(self):
         return np.array_split(self.G.nodes, self.threads)
@@ -104,7 +104,9 @@ class GraphTransform:
         return 1 - f_uv / self.k, 1 - g_uv / self.k
 
     def _calculate_nodes_weights(self) -> list[tuple[Any, Any, float]]:
+        print(f"Before calculating weights {datetime.now()}")
         weights = []
+        total_weight = list()
         self.all_weights = dict()
         nodes_address = list(itertools.combinations(self.eta_dict.keys(), 2))
         for u, v in nodes_address:
@@ -113,11 +115,18 @@ class GraphTransform:
 
             self.all_weights[u] = {**self.all_weights.get(u, {}), **{v: weight}}
 
-            if weight >= self.min_weight and self.G[u].get(v) is None:
+            if self.G[u].get(v) is None:
                 # weights.append((u, v, {'edge_weight': weight, 'weight': weight}))
                 weights.append((u, v, weight))
+                total_weight.append(weight)
 
-        return weights
+        mean_weight = sum(total_weight)/len(weights)
+        cut_weights = [(u, v, w) for u, v, w in weights if w >= mean_weight]
+
+        print(f"After calculating weights {datetime.now()}")
+        print(f"Weight: {mean_weight} +- {np.std(total_weight)}, min {min(total_weight)} max {max(total_weight)}")
+
+        return cut_weights
 
     def _create_new_graph(self, weights: list[tuple[Any, Any, Any]]):
         self.G_new.add_weighted_edges_from(weights, 'edge_weight')
