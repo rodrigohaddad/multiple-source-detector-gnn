@@ -2,6 +2,7 @@ from typing import Tuple, Union
 
 import torch.nn.functional as F
 from torch import Tensor
+from torch_geometric.nn import GraphConv, SAGEConv
 from torch_sparse import SparseTensor, matmul
 
 from torch_geometric.nn.conv import MessagePassing

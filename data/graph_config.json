@@ -1,4 +1,17 @@
-[
+[{
+    "file_path": "data/networks/powergrid.edgelist.txt",
+    "overwrite_previous": false,
+    "name": "powergrid",
+    "model": "SI",
+    "infection_config" : {
+      "model": "SI",
+      "n_sources": 8,
+      "max_infected_fraction": 0.5,
+      "params": {
+        "beta": 0.01
+      }
+    }
+  },
   {
     "name": "randba0",
     "graph_type": "ba",

@@ -1,5 +1,5 @@
 import itertools
-from typing import Any, List, Tuple
+from typing import Any
 
 import networkx as nx
 import concurrent.futures
@@ -113,7 +113,7 @@ class GraphTransform:
             f_uv, g_uv = self._calculate_sum_of_difference_infections(u, v)
             weight = self._calculate_weight(f_uv, g_uv)
 
-            self.all_weights[u] = {**self.all_weights.get(u, {}), **{v: weight}}
+            # self.all_weights[u] = {**self.all_weights.get(u, {}), **{v: weight}}
 
             if self.G[u].get(v) is None:
                 # weights.append((u, v, {'edge_weight': weight, 'weight': weight}))
