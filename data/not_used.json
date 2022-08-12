@@ -3,11 +3,13 @@
     "overwrite_previous": false,
     "name": "powergrid",
     "model": "SI",
-    "n_iter": 200,
-    "params": {
-      "beta": 0.001,
-      "gamma": 0.01,
-      "fraction_infected": 0.05
+    "infection_config" : {
+      "model": "SI",
+      "n_sources": 8,
+      "max_infected_fraction": 0.5,
+      "params": {
+        "beta": 0.01
+      }
     }
   },
   {

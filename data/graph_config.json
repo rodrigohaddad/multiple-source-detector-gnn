@@ -1,28 +1,15 @@
-[{
-    "file_path": "data/networks/powergrid.edgelist.txt",
-    "overwrite_previous": false,
-    "name": "powergrid",
-    "model": "SI",
-    "infection_config" : {
-      "model": "SI",
-      "n_sources": 8,
-      "max_infected_fraction": 0.5,
-      "params": {
-        "beta": 0.01
-      }
-    }
-  },
+[
   {
     "name": "randba0",
     "graph_type": "ba",
     "artificial_graph_config": {
-      "n": 800,
-      "m": 3
+      "n": 1200,
+      "m": 5
     },
     "overwrite_previous": false,
     "infection_config" : {
       "model": "SI",
-      "n_sources": 8,
+      "n_sources": 5,
       "max_infected_fraction": 0.5,
       "params": {
         "beta": 0.01
@@ -34,12 +21,12 @@
     "graph_type": "ba",
     "artificial_graph_config": {
       "n": 1000,
-      "m": 15
+      "m": 4
     },
     "overwrite_previous": false,
     "infection_config" : {
       "model": "SI",
-      "n_sources": 15,
+      "n_sources": 5,
       "max_infected_fraction": 0.5,
       "params": {
         "beta": 0.01
@@ -50,13 +37,13 @@
     "name": "randba2",
     "graph_type": "ba",
     "artificial_graph_config": {
-      "n": 2000,
-      "m": 15
+      "n": 1200,
+      "m": 5
     },
     "overwrite_previous": false,
     "infection_config" : {
       "model": "SI",
-      "n_sources": 15,
+      "n_sources": 5,
       "max_infected_fraction": 0.5,
       "params": {
         "beta": 0.01
@@ -67,13 +54,13 @@
     "name": "randba3",
     "graph_type": "ba",
     "artificial_graph_config": {
-      "n": 3000,
-      "m": 18
+      "n": 1400,
+      "m": 6
     },
     "overwrite_previous": false,
     "infection_config" : {
       "model": "SI",
-      "n_sources": 15,
+      "n_sources": 5,
       "max_infected_fraction": 0.5,
       "params": {
         "beta": 0.01

@@ -16,11 +16,11 @@ class GraphTransform:
     G_new = nx.Graph()
     threads = 5
 
-    def __init__(self, g_inf, k: int, min_weight: float, alpha_weight: float):
+    def __init__(self, g_inf, k: int, cut_type: str, alpha_weight: float):
         self.G = g_inf.G
         self.model = g_inf.model
         self.k = k + 1
-        self.min_weight = min_weight
+        self.cut_type = cut_type
         self.alpha_weight = alpha_weight
 
         self.multithreading_bfs(self._split_nodes())
@@ -103,6 +103,12 @@ class GraphTransform:
             g_uv += abs(u_eta - v_eta)
         return 1 - f_uv / self.k, 1 - g_uv / self.k
 
+    def _calculate_cut(self, total_weight, weights):
+        # print(f"{sum(total_weight)/len(weights)}\n"
+        #       f"{np.percentile(total_weight, 75)}\n")
+        return {'mean': sum(total_weight)/len(weights),
+                'quartile': np.percentile(total_weight, 75)}[self.cut_type]
+
     def _calculate_nodes_weights(self) -> list[tuple[Any, Any, float]]:
         print(f"Before calculating weights {datetime.now()}")
         weights = []
@@ -112,7 +118,6 @@ class GraphTransform:
         for u, v in nodes_address:
             f_uv, g_uv = self._calculate_sum_of_difference_infections(u, v)
             weight = self._calculate_weight(f_uv, g_uv)
-
             # self.all_weights[u] = {**self.all_weights.get(u, {}), **{v: weight}}
 
             if self.G[u].get(v) is None:
@@ -120,11 +125,12 @@ class GraphTransform:
                 weights.append((u, v, weight))
                 total_weight.append(weight)
 
-        mean_weight = sum(total_weight)/len(weights)
-        cut_weights = [(u, v, w) for u, v, w in weights if w >= mean_weight]
+        cut = self._calculate_cut(total_weight, weights)
+
+        cut_weights = [(u, v, w) for u, v, w in weights if w >= cut]
 
         print(f"After calculating weights {datetime.now()}")
-        print(f"Weight: {mean_weight} +- {np.std(total_weight)}, min {min(total_weight)} max {max(total_weight)}")
+        print(f"Weight: {cut} +- {np.std(total_weight)}, min {min(total_weight)} max {max(total_weight)}")
 
         return cut_weights
 

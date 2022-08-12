@@ -28,8 +28,11 @@ def main():
         # Data
         data = pickle.load(open(file, 'rb'))
 
-        train_loader = PosNegSampler(data.edge_index, sizes=[15, 10, 10], batch_size=40,
-                                     shuffle=True, num_nodes=data.num_nodes)
+        train_loader = PosNegSampler(edge_index=data.edge_index,
+                                     sizes=[15, 10, 10],
+                                     batch_size=120,
+                                     shuffle=True,
+                                     num_nodes=data.num_nodes)
 
         # data.n_id = torch.arange(data.num_nodes)
         # train_loader = NeighborLoader(data, num_neighbors=[20, 15, 10], batch_size=64,
