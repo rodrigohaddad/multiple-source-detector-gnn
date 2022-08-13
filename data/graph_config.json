@@ -10,7 +10,7 @@
     "infection_config" : {
       "model": "SI",
       "n_sources": 5,
-      "max_infected_fraction": 0.5,
+      "max_infected_fraction": 0.3,
       "params": {
         "beta": 0.01
       }
@@ -27,7 +27,7 @@
     "infection_config" : {
       "model": "SI",
       "n_sources": 5,
-      "max_infected_fraction": 0.5,
+      "max_infected_fraction": 0.3,
       "params": {
         "beta": 0.01
       }
@@ -44,7 +44,7 @@
     "infection_config" : {
       "model": "SI",
       "n_sources": 5,
-      "max_infected_fraction": 0.5,
+      "max_infected_fraction": 0.3,
       "params": {
         "beta": 0.01
       }
@@ -61,7 +61,7 @@
     "infection_config" : {
       "model": "SI",
       "n_sources": 5,
-      "max_infected_fraction": 0.5,
+      "max_infected_fraction": 0.3,
       "params": {
         "beta": 0.01
       }
