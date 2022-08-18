@@ -107,7 +107,7 @@ class GraphTransform:
         # print(f"{sum(total_weight)/len(weights)}\n"
         #       f"{np.percentile(total_weight, 75)}\n")
         return {'mean': sum(total_weight)/len(weights),
-                'quartile': np.percentile(total_weight, 75)}[self.cut_type]
+                'quartile': np.percentile(total_weight, 65)}[self.cut_type]
 
     def _calculate_nodes_weights(self) -> list[tuple[Any, Any, float]]:
         print(f"Before calculating weights {datetime.now()}")
