@@ -11,7 +11,7 @@ def main():
         g_inf = pickle.load(open(file, 'rb'))
         GraphTransform(g_inf=g_inf,
                        k=2,
-                       cut_type='quartile',
+                       cut_type='percentile',
                        alpha_weight=.5)
 
 

@@ -27,11 +27,15 @@ class GraphTransform:
         self._create_new_graph(self._calculate_nodes_weights())
 
         # print(f'Infected graph diameter: {nx.diameter(self.G)}')
-        print(f'Transformed graph diameter: {nx.diameter(self.G_new)}')
-        print(f'C. Components: {nx.number_connected_components(self.G_new)}\n')
+        # print(f'Transformed graph diameter: {nx.diameter(self.G_new)}')
+
+        print(f'Infected graph n nodes: {self.G.number_of_nodes()}')
+        print(f'Transformed graph n nodes: {self.G_new.number_of_nodes()}')
 
         save_to_pickle(read_as_pyg_data(self.G_new), 'graph_transformed',
                        f'{g_inf.graph_config.name}-transformed')
+
+        print('')
 
     def _calculate_neighbourhood_infection(self, v: int) -> float:
         n_inf = 0
@@ -107,7 +111,7 @@ class GraphTransform:
         # print(f"{sum(total_weight)/len(weights)}\n"
         #       f"{np.percentile(total_weight, 75)}\n")
         return {'mean': sum(total_weight)/len(weights),
-                'quartile': np.percentile(total_weight, 65)}[self.cut_type]
+                'percentile': np.percentile(total_weight, 60)}[self.cut_type]
 
     def _calculate_nodes_weights(self) -> list[tuple[Any, Any, float]]:
         print(f"Before calculating weights {datetime.now()}")

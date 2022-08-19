@@ -17,16 +17,16 @@
     }
   },
   {
-    "name": "randba1",
+    "name": "randba10",
     "graph_type": "ba",
     "artificial_graph_config": {
-      "n": 1000,
-      "m": 4
+      "n": 1015,
+      "m": 6
     },
     "overwrite_previous": false,
     "infection_config" : {
       "model": "SI",
-      "n_sources": 5,
+      "n_sources": 8,
       "max_infected_fraction": 0.3,
       "params": {
         "beta": 0.01
@@ -37,7 +37,7 @@
     "name": "randba2",
     "graph_type": "ba",
     "artificial_graph_config": {
-      "n": 1200,
+      "n": 1210,
       "m": 5
     },
     "overwrite_previous": false,
@@ -61,6 +61,40 @@
     "infection_config" : {
       "model": "SI",
       "n_sources": 5,
+      "max_infected_fraction": 0.3,
+      "params": {
+        "beta": 0.01
+      }
+    }
+  },
+  {
+    "name": "randba4",
+    "graph_type": "ba",
+    "artificial_graph_config": {
+      "n": 1410,
+      "m": 5
+    },
+    "overwrite_previous": false,
+    "infection_config" : {
+      "model": "SI",
+      "n_sources": 5,
+      "max_infected_fraction": 0.3,
+      "params": {
+        "beta": 0.01
+      }
+    }
+  },
+  {
+    "name": "randba5",
+    "graph_type": "ba",
+    "artificial_graph_config": {
+      "n": 1125,
+      "m": 5
+    },
+    "overwrite_previous": false,
+    "infection_config" : {
+      "model": "SI",
+      "n_sources": 8,
       "max_infected_fraction": 0.3,
       "params": {
         "beta": 0.01
