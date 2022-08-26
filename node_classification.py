@@ -12,13 +12,13 @@ from utils.test_model import concatenate_sources
 
 def main():
     conj_emb = torch.Tensor()
-    sources = torch.Tensor()
+    sources = torch.empty(0, dtype=torch.int)
     for filename in os.listdir(EMBEDDING_DIR):
         file = os.path.join(EMBEDDING_DIR, filename)
         if not os.path.isfile(file):
             continue
 
-        conj_emb, sources = concatenate_sources(file, filename, sources, conj_emb)
+        conj_emb, sources, _ = concatenate_sources(file, filename, sources, conj_emb)
 
     # x_train, x_test, y_train, y_test = train_test_split(conj_emb, sources, test_size=0.5, random_state=2)
     clf = svm.SVC()
@@ -32,7 +32,7 @@ def main():
     # clf_tree = clf_tree.fit(x_train, y_train)
     # out_tree = clf_tree.predict(x_test)
 
-    save_to_pickle(clf, 'model', 'node_classifier')
+    save_to_pickle(clf, 'model', 'node_classifier_weightless')
 
 
 if __name__ == '__main__':

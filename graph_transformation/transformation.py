@@ -1,3 +1,4 @@
+import copy
 import itertools
 from typing import Any
 
@@ -6,33 +7,41 @@ import concurrent.futures
 import numpy as np
 
 from graph_transformation.node_metrics import NodeMetrics
+from utils.propagation_score import calculate_propagation_score
 from utils.save_to_pickle import save_to_pickle, read_as_pyg_data
 from datetime import datetime
 
 
 class GraphTransform:
-    eta_dict = dict()
-    alpha_dict = dict()
-    G_new = nx.Graph()
     threads = 5
 
-    def __init__(self, g_inf, k: int, cut_type: str, alpha_weight: float):
+    def __init__(self, g_inf, k: int, percentile: int, alpha_weight: float, keep_old: bool):
+        self.eta_dict = dict()
+        self.alpha_dict = dict()
+        self.keep_old = keep_old
+
+        self.G_new = nx.Graph()
+        if keep_old:
+            self.G_new = copy.deepcopy(g_inf.G)
+
         self.G = g_inf.G
         self.model = g_inf.model
-        self.k = k + 1
-        self.cut_type = cut_type
+        self.k = k
+        self.percentile = percentile
         self.alpha_weight = alpha_weight
 
+        self.propagation_score = calculate_propagation_score(g_inf)
         self.multithreading_bfs(self._split_nodes())
-        self._create_new_graph(self._calculate_nodes_weights())
+        self._create_new_graph([] if keep_old else self._calculate_nodes_weights())
 
         # print(f'Infected graph diameter: {nx.diameter(self.G)}')
-        # print(f'Transformed graph diameter: {nx.diameter(self.G_new)}')
+        print(f'Transformed graph diameter: {nx.diameter(self.G_new)}')
 
         print(f'Infected graph n nodes: {self.G.number_of_nodes()}')
         print(f'Transformed graph n nodes: {self.G_new.number_of_nodes()}')
 
-        save_to_pickle(read_as_pyg_data(self.G_new), 'graph_transformed',
+        save_to_pickle(read_as_pyg_data(self.G_new),
+                       'graph_not_transformed' if keep_old else 'graph_transformed',
                        f'{g_inf.graph_config.name}-transformed')
 
         print('')
@@ -53,7 +62,7 @@ class GraphTransform:
                 futures.append(executor.submit(self.bfs, nodes=nodes))
             for future in concurrent.futures.as_completed(futures):
                 self.eta_dict = {**self.eta_dict, **future.result()[0]}
-                self.alpha_dict = {**self.eta_dict, **future.result()[1]}
+                self.alpha_dict = {**self.alpha_dict, **future.result()[1]}
         print(f"After calculating metrics {datetime.now()}")
 
     def _split_nodes(self):
@@ -107,14 +116,10 @@ class GraphTransform:
             g_uv += abs(u_eta - v_eta)
         return 1 - f_uv / self.k, 1 - g_uv / self.k
 
-    def _calculate_cut(self, total_weight, weights):
-        # print(f"{sum(total_weight)/len(weights)}\n"
-        #       f"{np.percentile(total_weight, 75)}\n")
-        return {'mean': sum(total_weight)/len(weights),
-                'percentile': np.percentile(total_weight, 60)}[self.cut_type]
+    def _calculate_cut(self, total_weight):
+        return np.percentile(total_weight, self.percentile)
 
     def _calculate_nodes_weights(self) -> list[tuple[Any, Any, float]]:
-        print(f"Before calculating weights {datetime.now()}")
         weights = []
         total_weight = list()
         self.all_weights = dict()
@@ -129,7 +134,7 @@ class GraphTransform:
                 weights.append((u, v, weight))
                 total_weight.append(weight)
 
-        cut = self._calculate_cut(total_weight, weights)
+        cut = self._calculate_cut(total_weight)
 
         cut_weights = [(u, v, w) for u, v, w in weights if w >= cut]
 
@@ -139,7 +144,9 @@ class GraphTransform:
         return cut_weights
 
     def _create_new_graph(self, weights: list[tuple[Any, Any, Any]]):
-        self.G_new.add_weighted_edges_from(weights, 'edge_weight')
+        if not self.keep_old:
+            self.G_new.add_weighted_edges_from(weights, 'edge_weight')
+        nx.set_node_attributes(self.G_new, self.propagation_score, name='propagation_score')
         nx.set_node_attributes(self.G_new, self.model.status, name='infected')
         nx.set_node_attributes(self.G_new, self.model.initial_status, name='source')
         nx.set_node_attributes(self.G_new, self.eta_dict, name='eta')

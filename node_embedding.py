@@ -1,22 +1,22 @@
 import os
 import pickle
 
-from utils.constants import TRANSFORMED_DIR
+from utils.constants import TRANSFORMED_DIR, MODEL_DIR, GLOBAL_MODEL_FILE, NOT_TRANSFORMED_DIR
 from utils.save_to_pickle import save_to_pickle
 from utils.test_model import test_embedding
 
 
 def main():
-    for filename in os.listdir(TRANSFORMED_DIR):
-        file = os.path.join(TRANSFORMED_DIR, filename)
+    for filename in os.listdir(NOT_TRANSFORMED_DIR):
+        file = os.path.join(NOT_TRANSFORMED_DIR, filename)
         if not os.path.isfile(file):
             continue
 
         # Data
         data = pickle.load(open(file, 'rb'))
 
-        model = pickle.load(open('data/model/sagemodel.pickle', 'rb'))
-        embedding = test_embedding(model, data)
+        model = pickle.load(open(f'{MODEL_DIR}{GLOBAL_MODEL_FILE}', 'rb'))
+        embedding = test_embedding(model, data, True)
 
         # print(f'\nGraphSAGE test accuracy: {acc*100:.2f}%\n')
 

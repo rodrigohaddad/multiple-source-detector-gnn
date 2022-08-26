@@ -1,7 +1,6 @@
 import pickle
 import networkx as nx
 
-from dataclasses import dataclass
 from torch_geometric.utils import from_networkx
 
 from utils.constants import DEVICE
@@ -22,7 +21,7 @@ def save_to_gml(obj, dire, name):
 def read_as_pyg_data(g):
     return from_networkx(G=g,
                          # group_node_attrs=['source'],
-                         group_node_attrs=['infected', 'eta', 'alpha']
+                         group_node_attrs=['infected', 'propagation_score', 'eta', 'alpha']
                          # group_edge_attrs=['weight']
                          ).to(device=DEVICE)
 

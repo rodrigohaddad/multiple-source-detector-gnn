@@ -17,7 +17,7 @@
     }
   },
   {
-    "name": "randba10",
+    "name": "randba1",
     "graph_type": "ba",
     "artificial_graph_config": {
       "n": 1015,
@@ -37,13 +37,13 @@
     "name": "randba2",
     "graph_type": "ba",
     "artificial_graph_config": {
-      "n": 1210,
+      "n": 1350,
       "m": 5
     },
     "overwrite_previous": false,
     "infection_config" : {
       "model": "SI",
-      "n_sources": 5,
+      "n_sources": 6,
       "max_infected_fraction": 0.3,
       "params": {
         "beta": 0.01
@@ -95,6 +95,40 @@
     "infection_config" : {
       "model": "SI",
       "n_sources": 8,
+      "max_infected_fraction": 0.3,
+      "params": {
+        "beta": 0.01
+      }
+    }
+  },
+  {
+    "name": "randba6",
+    "graph_type": "ba",
+    "artificial_graph_config": {
+      "n": 1225,
+      "m": 5
+    },
+    "overwrite_previous": false,
+    "infection_config" : {
+      "model": "SI",
+      "n_sources": 7,
+      "max_infected_fraction": 0.3,
+      "params": {
+        "beta": 0.01
+      }
+    }
+  },
+  {
+    "name": "randba7",
+    "graph_type": "ba",
+    "artificial_graph_config": {
+      "n": 1195,
+      "m": 5
+    },
+    "overwrite_previous": false,
+    "infection_config" : {
+      "model": "SI",
+      "n_sources": 7,
       "max_infected_fraction": 0.3,
       "params": {
         "beta": 0.01

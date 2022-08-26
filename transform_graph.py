@@ -10,9 +10,10 @@ def main():
         file = os.path.join(INFECTED_DIR, filename)
         g_inf = pickle.load(open(file, 'rb'))
         GraphTransform(g_inf=g_inf,
-                       k=2,
-                       cut_type='percentile',
-                       alpha_weight=.5)
+                       k=3,
+                       percentile=50,
+                       alpha_weight=.5,
+                       keep_old=True)
 
 
 if __name__ == '__main__':
