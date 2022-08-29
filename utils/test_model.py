@@ -22,6 +22,14 @@ def test_embedding(model, data, no_weight):
     return out
 
 
+@torch.no_grad()
+def test_pred(model, data):
+    model.eval()
+    _, out = model(data.x, data.edge_index)
+    y_pred = out.argmax(dim=1)
+    return y_pred
+
+
 def concatenate_sources(file, filename, sources, conj_emb, emb=None):
     if emb is None:
         emb = pickle.load(open(file, 'rb'))

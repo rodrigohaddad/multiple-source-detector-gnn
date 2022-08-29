@@ -41,7 +41,8 @@ class GraphTransform:
         print(f'Transformed graph n nodes: {self.G_new.number_of_nodes()}')
 
         save_to_pickle(read_as_pyg_data(self.G_new),
-                       'graph_not_transformed' if keep_old else 'graph_transformed',
+                       # 'graph_not_transformed' if keep_old else 'graph_transformed',
+                       'graph_labeled',
                        f'{g_inf.graph_config.name}-transformed')
 
         print('')
