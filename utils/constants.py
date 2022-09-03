@@ -7,12 +7,14 @@ INFECTED_DIR = 'data/infected_graph'
 
 TRANSFORMED_DIR = 'data/graph_transformed'
 NOT_TRANSFORMED_DIR = 'data/graph_not_transformed'
-LABELED_DIR = 'data/graph_labeled'
 
-MODEL_DIR = 'data/model/'
+MODEL_GRAPH_DIR = 'data/model/graph'
+MODEL_CLASS_DIR = 'data/model/classifier'
+
 MODEL_FILE = 'sagemodel.pickle'
-MODEL_WEIGHTLESS_FILE = 'sagemodel_weightless.pickle'
-MODEL_SUPERVISED_FILE = 'sagemodel_supervised.pickle'
-TEST_MODEL_SUPERVISED_FILE = 'test_sagemodel_supervised.pickle'
+
+GRAPH_SUP_UNTRANS_FILE = 'sage_model_sup_untrans.pickle'
+GRAPH_UNSUP_TRANS_FILE = 'sage_model_unsup_trans.pickle'
+GRAPH_UNSUP_UNTRANS_FILE = 'sage_model_unsup_untrans.pickle'
 
 GLOBAL_MODEL_FILE = 'sagemodel_weightless.pickle'

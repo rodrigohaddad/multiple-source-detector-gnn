@@ -5,7 +5,10 @@ import random
 from utils.save_to_pickle import save_to_pickle
 
 MODELS = {'SI': ep.SIModel,
-          'SIR': ep.SIRModel}
+          'SIR': ep.SIRModel,
+          'IC': ep.IndependentCascadesModel}
+
+SI_TRANSFORMATION = ['SIR', 'IC']
 
 
 class InfectedGraphProvision:
@@ -27,12 +30,21 @@ class InfectedGraphProvision:
                                **{'Infected': sources}})
         self._infect_graph(infection_config.max_infected_fraction)
 
+        if infection_config.model in SI_TRANSFORMATION:
+            self._convert_removed_to_not_infected()
+
         save_to_pickle(self, 'infected_graph',
                        f'{graph_config.name}-infected')
+
+    def _add_edge_config(self, param_value, param_name):
+        for e in self.G.edges():
+            self.config.add_edge_configuration(param_name, e, param_value)
 
     def _add_model_params(self, params):
         for param_name, param_value in params.items():
             self.config.add_model_parameter(param_name, param_value)
+            if param_name == 'threshold':
+                self._add_edge_config(param_value, param_name)
             if param_name == 'Infected':
                 self.config.add_model_initial_configuration('Infected', params['Infected'])
         self.model.set_initial_status(self.config)
@@ -54,3 +66,8 @@ class InfectedGraphProvision:
 
     def _select_random_sources(self, n_sources):
         return random.sample(list(self.G.nodes()), n_sources)
+
+    def _convert_removed_to_not_infected(self):
+        status = {node: 0 if infection > 1 else infection for node, infection in self.model.status.items()}
+        self.model.status = status
+

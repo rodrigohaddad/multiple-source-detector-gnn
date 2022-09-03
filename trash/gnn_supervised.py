@@ -69,5 +69,4 @@ class SAGESupervised(nn.Module):
             if epoch % 10 == 0:
                 print(f'Epoch {epoch:>3} | Train Loss: {total_loss/rounds:.3f} '
                       f'| Train Acc: {acc/rounds * 100:>6.3f}% ')
-        print("alo")
         print('Done')

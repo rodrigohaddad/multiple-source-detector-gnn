@@ -3,22 +3,22 @@ import pickle
 
 from torch_geometric.loader import NeighborSampler
 
-from gnn_embedding.gnn_supervised import SAGESupervised
-from utils.constants import DEVICE, MODEL_DIR, MODEL_SUPERVISED_FILE, LABELED_DIR
+from trash.gnn_supervised import SAGESupervised
+from utils.constants import DEVICE, MODEL_GRAPH_DIR, MODEL_SUPERVISED_FILE, NOT_TRANSFORMED_DIR
 from utils.save_to_pickle import save_to_pickle
 
 
 def main():
     try:
-        model = pickle.load(open(f'{MODEL_DIR}{MODEL_SUPERVISED_FILE}', 'rb'))
+        model = pickle.load(open(f'{MODEL_GRAPH_DIR}{MODEL_SUPERVISED_FILE}', 'rb'))
     except:
         model = SAGESupervised(in_channels=8,  # data.num_node_features
                                hidden_channels=2,  # 512
                                num_layers=4)
     model = model.to(DEVICE)
 
-    for filename in os.listdir(LABELED_DIR):
-        file = os.path.join(LABELED_DIR, filename)
+    for filename in os.listdir(NOT_TRANSFORMED_DIR):
+        file = os.path.join(NOT_TRANSFORMED_DIR, filename)
         if not os.path.isfile(file):
             continue
 

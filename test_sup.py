@@ -4,17 +4,17 @@ import pickle
 from torch_geometric.utils import accuracy, f1_score
 from sklearn.metrics import f1_score as sk_f1_score
 
-from utils.constants import MODEL_DIR, TEST_MODEL_SUPERVISED_FILE, LABELED_DIR
+from utils.constants import MODEL_GRAPH_DIR, GRAPH_SUP_UNTRANS_FILE, NOT_TRANSFORMED_DIR
 from utils.test_model import test_pred
 
 
 def main():
     # Load embedding model
-    sage = pickle.load(open(f'{MODEL_DIR}{TEST_MODEL_SUPERVISED_FILE}', 'rb'))
+    sage = pickle.load(open(f'{MODEL_GRAPH_DIR}{GRAPH_SUP_UNTRANS_FILE}', 'rb'))
 
     # Load test graphs
-    for filename in os.listdir(f"{LABELED_DIR}/test"):
-        file = os.path.join(f"{LABELED_DIR}/test", filename)
+    for filename in os.listdir(f"{NOT_TRANSFORMED_DIR}/test"):
+        file = os.path.join(f"{NOT_TRANSFORMED_DIR}/test", filename)
         if not os.path.isfile(file):
             continue
 

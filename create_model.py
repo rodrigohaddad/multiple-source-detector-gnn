@@ -1,7 +1,7 @@
 import os
 import pickle
 
-from utils.constants import TRANSFORMED_DIR, DEVICE, MODEL_DIR, MODEL_FILE
+from utils.constants import TRANSFORMED_DIR, DEVICE, MODEL_GRAPH_DIR, MODEL_FILE
 from gnn_embedding.gnn import SAGE
 from gnn_embedding.sampler import PosNegSampler
 from utils.save_to_pickle import save_to_pickle
@@ -9,7 +9,7 @@ from utils.save_to_pickle import save_to_pickle
 
 def main():
     try:
-        model = pickle.load(open(f'{MODEL_DIR}{MODEL_FILE}', 'rb'))
+        model = pickle.load(open(f'{MODEL_GRAPH_DIR}{MODEL_FILE}', 'rb'))
     except:
         model = SAGE(in_channels=8,  # data.num_node_features
                      hidden_channels=128,  # 512

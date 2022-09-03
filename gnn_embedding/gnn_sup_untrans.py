@@ -7,7 +7,8 @@ import torch.nn as nn
 from torch_geometric.utils import accuracy
 
 
-class GraphSAGE(torch.nn.Module):
+# Supervised, not transformed graph
+class SUSAGE(torch.nn.Module):
     def __init__(self, dim_in, dim_h, dim_out, n_layers):
         super().__init__()
         self.n_layers = n_layers

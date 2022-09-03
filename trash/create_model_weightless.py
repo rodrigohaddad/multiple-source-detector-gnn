@@ -1,15 +1,15 @@
 import os
 import pickle
 
-from gnn_embedding.gnn_weightless_vertex import SAGEWeightless
-from utils.constants import DEVICE, MODEL_DIR, MODEL_WEIGHTLESS_FILE, NOT_TRANSFORMED_DIR
+from trash.gnn_weightless_vertex import SAGEWeightless
+from utils.constants import DEVICE, MODEL_GRAPH_DIR, MODEL_WEIGHTLESS_FILE, NOT_TRANSFORMED_DIR
 from gnn_embedding.sampler import PosNegSampler
 from utils.save_to_pickle import save_to_pickle
 
 
 def main():
     try:
-        model = pickle.load(open(f'{MODEL_DIR}{MODEL_WEIGHTLESS_FILE}', 'rb'))
+        model = pickle.load(open(f'{MODEL_GRAPH_DIR}{MODEL_WEIGHTLESS_FILE}', 'rb'))
     except:
         model = SAGEWeightless(in_channels=8,  # data.num_node_features
                                hidden_channels=128,  # 512

@@ -1,7 +1,7 @@
 import os
 import pickle
 
-from utils.constants import TRANSFORMED_DIR, MODEL_DIR, GLOBAL_MODEL_FILE, NOT_TRANSFORMED_DIR
+from utils.constants import TRANSFORMED_DIR, MODEL_GRAPH_DIR, GLOBAL_MODEL_FILE, NOT_TRANSFORMED_DIR
 from utils.save_to_pickle import save_to_pickle
 from utils.test_model import test_embedding
 
@@ -15,7 +15,7 @@ def main():
         # Data
         data = pickle.load(open(file, 'rb'))
 
-        model = pickle.load(open(f'{MODEL_DIR}{GLOBAL_MODEL_FILE}', 'rb'))
+        model = pickle.load(open(f'{MODEL_GRAPH_DIR}{GLOBAL_MODEL_FILE}', 'rb'))
         embedding = test_embedding(model, data, True)
 
         # print(f'\nGraphSAGE test accuracy: {acc*100:.2f}%\n')

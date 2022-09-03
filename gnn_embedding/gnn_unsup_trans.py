@@ -1,28 +1,33 @@
 import torch
-import torch.nn as nn
 import torch.nn.functional as F
+import torch.nn as nn
 
 from gnn_embedding.operator import MsgConv
 
 
 # Unsupervised, transformed graph
-class SAGE(nn.Module):
-    def __init__(self, in_channels: int, hidden_channels: int,
-                 num_layers: int):
-        super(SAGE, self).__init__()
-        self.num_layers = num_layers
+class UTSAGE(torch.nn.Module):
+    def __init__(self, dim_in, dim_h, dim_out, n_layers):
+        super().__init__()
+        self.n_layers = n_layers
         self.convs = nn.ModuleList()
 
-        for i in range(num_layers):
-            in_channels = in_channels if i == 0 else hidden_channels
-            self.convs.append(MsgConv(in_channels, hidden_channels, aggr='mean'))
+        for i in range(n_layers):
+            in_channels = dim_in if i == 0 else dim_h
+            out_channels = dim_out if i == n_layers - 1 else dim_h
+            self.convs.append(MsgConv(in_channels, out_channels, aggr='mean'))
+
+        self.optimizer = torch.optim.Adam(self.parameters(),
+                                          lr=0.001,
+                                          weight_decay=5e-4)
 
     def forward(self, x, adjs, edge_weight):
-        for i, (edge_index, e_id, size) in enumerate(adjs):
+        for i, (conv, info) in enumerate(zip(self.convs, adjs)):
+            edge_index, e_id, size = info
             x_target = x[:size[1]]  # Target nodes are always placed first.
-            x = self.convs[i]((x.to(torch.float), x_target.to(torch.float)),
-                              edge_index, edge_weight[e_id])
-            if i != self.num_layers - 1:
+            x = conv((x.to(torch.float), x_target.to(torch.float)),
+                     edge_index, edge_weight[e_id])
+            if i != self.n_layers - 1:
                 x = x.relu()
                 x = F.dropout(x, p=0.2, training=self.training)
         return x
@@ -30,7 +35,7 @@ class SAGE(nn.Module):
     def full_forward(self, x, edge_index, edge_weight):
         for i, conv in enumerate(self.convs):
             x = conv(x.to(torch.float), edge_index, edge_weight)
-            if i != self.num_layers - 1:
+            if i != self.n_layers - 1:
                 x = x.relu()
                 x = F.dropout(x, p=0.2, training=self.training)
         return x
@@ -44,12 +49,12 @@ class SAGE(nn.Module):
         return -pos_loss - neg_loss
 
     def fit(self, data, device, epochs, train_loader):
-        optimizer = torch.optim.Adam(self.parameters(), lr=0.001)
         x, edge_index = data.x.to(device), data.edge_index.to(device)
+        optimizer = self.optimizer
         self.train()
         val = 0
-        # data.val_mask
 
+        self.train()
         for epoch in range(epochs + 1):
             total_loss = 0
             for batch_size, n_id, adjs in train_loader:
@@ -62,11 +67,9 @@ class SAGE(nn.Module):
                 loss.backward()
                 optimizer.step()
 
-                total_loss += float(loss) * out.size(0)
+                total_loss += float(loss)
                 val += torch.sum(torch.abs(out))
 
             if epoch % 10 == 0:
-                print(total_loss / data.num_nodes)
-                print(f'Epoch {epoch:>3} | Train Loss: {total_loss / len(data):.3f}')
-
-        print('Done')
+                print(f'Epoch {epoch:>3} | Train Loss: {total_loss / len(train_loader):.3f}')
+        print("Done graph training")
