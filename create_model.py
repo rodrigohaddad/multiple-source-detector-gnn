@@ -23,10 +23,11 @@ def main():
 
         # Data
         data = pickle.load(open(file, 'rb'))
+        data.x = data.x[:, :-1].float()
 
         train_loader = PosNegSampler(edge_index=data.edge_index,
-                                     sizes=[-1, 30, 30, 30],
-                                     batch_size=100,
+                                     sizes=[-1, 15, 10, 5],
+                                     batch_size=30,
                                      shuffle=True,
                                      num_nodes=data.num_nodes)
 

@@ -30,7 +30,7 @@ class GraphTransform:
         self.percentile = percentile
         self.alpha_weight = alpha_weight
 
-        self.propagation_score = calculate_propagation_score(g_inf)
+        # self.propagation_score = calculate_propagation_score(g_inf)
         self.multithreading_bfs(self._split_nodes())
         self._create_new_graph([] if keep_old else self._calculate_nodes_weights())
 
@@ -40,9 +40,11 @@ class GraphTransform:
         print(f'Infected graph n nodes: {self.G.number_of_nodes()}')
         print(f'Transformed graph n nodes: {self.G_new.number_of_nodes()}')
 
-        save_to_pickle(read_as_pyg_data(self.G_new),
+        pyg_data = read_as_pyg_data(self.G_new)
+        save_to_pickle(pyg_data,
                        'graph_not_transformed' if keep_old else 'graph_transformed',
                        f"{g_inf.graph_config.name}-{'not-transformed' if keep_old else 'transformed'}")
+        del pyg_data
 
         print('')
 
@@ -146,7 +148,7 @@ class GraphTransform:
     def _create_new_graph(self, weights: list[tuple[Any, Any, Any]]):
         if not self.keep_old:
             self.G_new.add_weighted_edges_from(weights, 'edge_weight')
-        nx.set_node_attributes(self.G_new, self.propagation_score, name='propagation_score')
+        # nx.set_node_attributes(self.G_new, self.propagation_score, name='propagation_score')
         nx.set_node_attributes(self.G_new, self.model.status, name='infected')
         nx.set_node_attributes(self.G_new, self.model.initial_status, name='source')
         nx.set_node_attributes(self.G_new, self.eta_dict, name='eta')

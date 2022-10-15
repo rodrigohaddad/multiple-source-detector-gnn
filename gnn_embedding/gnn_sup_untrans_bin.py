@@ -8,7 +8,7 @@ from torch_geometric.utils import accuracy
 
 
 # Supervised, not transformed graph
-class SUSAGE(torch.nn.Module):
+class SUSAGEBin(torch.nn.Module):
     def __init__(self, dim_in, dim_h, dim_out, n_layers, aggr):
         super().__init__()
         self.aggr = aggr
@@ -33,13 +33,18 @@ class SUSAGE(torch.nn.Module):
             if i != self.n_layers - 1:
                 h = torch.relu(h)
                 h = F.dropout(h, p=0.1, training=self.training)
-        return h, F.log_softmax(h, dim=1)
+        return h, torch.sigmoid(h)
 
     def fit(self, data, epochs, train_loader):
         cl_weights = class_weight.compute_class_weight('balanced',
                                                        classes=np.unique(data.y),
                                                        y=data.y.numpy())
-        criterion = torch.nn.CrossEntropyLoss(weight=torch.tensor(cl_weights, dtype=torch.float))
+
+        weights = data.y*max(cl_weights)*10
+        weights[weights == 0] = min(cl_weights)
+        weights = weights.unsqueeze(1)
+
+        criterion = torch.nn.BCELoss(weight=weights)
         optimizer = self.optimizer
 
         self.train()
@@ -50,16 +55,20 @@ class SUSAGE(torch.nn.Module):
             for batch in train_loader:
                 optimizer.zero_grad()
                 _, out = self(batch.x, batch.edge_index)
-                loss = criterion(out, batch.y)
+                unsqueezed = batch.y.unsqueeze(1)
+                if len(unsqueezed) != 1500:
+                    print("aqui")
+                loss = criterion(out, unsqueezed)
                 total_loss += loss
-                acc += accuracy(out.argmax(dim=1),
-                                batch.y)
+                # acc += accuracy(out.argmax(dim=1),
+                #                 batch.y)
 
                 loss.backward()
                 optimizer.step()
 
             if epoch % 10 == 0:
-                print(f'N pred sources: {int(sum(out.argmax(dim=1)))}')
+                # print(f'N pred sources: {int(sum(out.argmax(dim=1)))}')
+                print(f'N pred sources: {(0.5 < out).sum()}')
                 print(f'Epoch {epoch:>3} | Train Loss: {total_loss / len(train_loader):.3f} '
                       f'| Train Acc: {acc / len(train_loader) * 100:>6.2f}%')
         print("Done graph training")

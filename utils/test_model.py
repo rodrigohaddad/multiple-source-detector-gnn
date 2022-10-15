@@ -13,7 +13,7 @@ def test_embedding(model, data, no_weight):
         data.test_mask = torch.arange(data.num_nodes - 1)
 
     if no_weight:
-        out = model.full_forward(data.x, data.edge_index).cpu()
+        _, out = model.full_forward(data.x, data.edge_index)
     else:
         out = model.full_forward(data.x, data.edge_index, data.edge_weight).cpu()
 

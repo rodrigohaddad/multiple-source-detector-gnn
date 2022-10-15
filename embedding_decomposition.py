@@ -23,9 +23,9 @@ def main():
         conj_emb, sources, infections = concatenate_sources(file, filename, sources, conj_emb)
 
     # data = PCA(n_components=2).fit_transform(conj_emb)
-    # data = umap.UMAP().fit_transform(conj_emb)
-    data = TSNE(n_components=2, learning_rate='auto',
-                init='random').fit_transform(conj_emb)
+    data = umap.UMAP().fit_transform(conj_emb)
+    # data = TSNE(n_components=2, learning_rate='auto',
+    #             init='random').fit_transform(conj_emb)
 
     # palette = {0: 'C0', 1: 'C1'}
     plt.figure(figsize=(10, 10))

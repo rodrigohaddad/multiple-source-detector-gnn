@@ -27,7 +27,7 @@ def main():
         data.x = data.x[:, :-1].float()
 
         train_loader = PosNegSampler(edge_index=data.edge_index,
-                                     sizes=[30, 30, 30],
+                                     sizes=[15, 10, 5],
                                      batch_size=30,
                                      shuffle=True,
                                      num_nodes=data.num_nodes)

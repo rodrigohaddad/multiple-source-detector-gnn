@@ -30,7 +30,15 @@ class UUSAGE(torch.nn.Module):
             if i != self.n_layers - 1:
                 x = x.relu()
                 x = F.dropout(x, p=0.2, training=self.training)
-        return x
+        return F.log_softmax(x, dim=1), x
+
+    def full_forward(self, x, edge_index):
+        for i, conv in enumerate(self.convs):
+            x = conv(x.to(torch.float), edge_index)
+            if i != self.n_layers - 1:
+                x = x.relu()
+                x = F.dropout(x, p=0.2, training=self.training)
+        return F.log_softmax(x, dim=1), x
 
     @staticmethod
     def loss_fn(out):
@@ -54,7 +62,7 @@ class UUSAGE(torch.nn.Module):
                 adjs = [adj.to(device) for adj in adjs]
                 optimizer.zero_grad()
 
-                out = self(x[n_id], adjs)
+                _, out = self(x[n_id], adjs)
                 loss = self.loss_fn(out)
                 loss.backward()
                 optimizer.step()
