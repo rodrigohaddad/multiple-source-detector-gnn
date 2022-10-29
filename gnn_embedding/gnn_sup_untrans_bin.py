@@ -33,18 +33,25 @@ class SUSAGEBin(torch.nn.Module):
             if i != self.n_layers - 1:
                 h = torch.relu(h)
                 h = F.dropout(h, p=0.1, training=self.training)
+        # return torch.sigmoid(h), h
         return h, torch.sigmoid(h)
+
+    @staticmethod
+    def calculate_weights(batch, cl_weights, multiplier):
+        weights = batch.y * max(cl_weights) * multiplier
+        weights[weights == 0] = min(cl_weights)
+        return weights.unsqueeze(1)
 
     def fit(self, data, epochs, train_loader):
         cl_weights = class_weight.compute_class_weight('balanced',
                                                        classes=np.unique(data.y),
                                                        y=data.y.numpy())
 
-        weights = data.y*max(cl_weights)*10
-        weights[weights == 0] = min(cl_weights)
-        weights = weights.unsqueeze(1)
+        # weights = data.y*max(cl_weights)
+        # weights[weights == 0] = min(cl_weights)
+        # weights = weights.unsqueeze(1)
 
-        criterion = torch.nn.BCELoss(weight=weights)
+        criterion = torch.nn.BCEWithLogitsLoss()
         optimizer = self.optimizer
 
         self.train()
@@ -54,10 +61,13 @@ class SUSAGEBin(torch.nn.Module):
 
             for batch in train_loader:
                 optimizer.zero_grad()
-                _, out = self(batch.x, batch.edge_index)
+                out, out_sig = self(batch.x, batch.edge_index)
                 unsqueezed = batch.y.unsqueeze(1)
-                if len(unsqueezed) != 1500:
-                    print("aqui")
+
+                weights = self.calculate_weights(batch, cl_weights, 100)
+                criterion.register_buffer('weight', weights)
+                # criterion.weight = weights
+
                 loss = criterion(out, unsqueezed)
                 total_loss += loss
                 # acc += accuracy(out.argmax(dim=1),
@@ -68,7 +78,8 @@ class SUSAGEBin(torch.nn.Module):
 
             if epoch % 10 == 0:
                 # print(f'N pred sources: {int(sum(out.argmax(dim=1)))}')
-                print(f'N pred sources: {(0.5 < out).sum()}')
-                print(f'Epoch {epoch:>3} | Train Loss: {total_loss / len(train_loader):.3f} '
-                      f'| Train Acc: {acc / len(train_loader) * 100:>6.2f}%')
+                # pc = np.percentile(out_sig.detach().numpy(), 98)
+                print(np.asarray(data.y == 1).nonzero())
+                print(f'N pred sources: {(out_sig.mean() * 1.5 < out_sig).sum()}')
+                print(f'Epoch {epoch:>3} | Train Loss: {total_loss / len(train_loader):.3f}')
         print("Done graph training")

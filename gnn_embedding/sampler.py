@@ -3,7 +3,7 @@ import collections
 import torch
 from torch_cluster import random_walk
 
-from torch_geometric.loader import NeighborSampler
+from torch_geometric.loader import NeighborSampler, NeighborLoader
 
 
 class PosNegSampler(NeighborSampler):
@@ -21,3 +21,4 @@ class PosNegSampler(NeighborSampler):
         batch = torch.cat([batch, pos_batch, neg_batch], dim=0)
         # aa = [item for item, count in collections.Counter(batch.tolist()).items() if count > 1]
         return super().sample(batch)
+

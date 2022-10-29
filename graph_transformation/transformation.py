@@ -42,7 +42,7 @@ class GraphTransform:
 
         pyg_data = read_as_pyg_data(self.G_new)
         save_to_pickle(pyg_data,
-                       'graph_not_transformed' if keep_old else 'graph_transformed',
+                       'graph_not_transformed_3s_10inf' if keep_old else 'graph_transformed',
                        f"{g_inf.graph_config.name}-{'not-transformed' if keep_old else 'transformed'}")
         del pyg_data
 

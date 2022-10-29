@@ -1,6 +1,6 @@
 [
   {
-    "name": "rander0",
+    "name": "rander0sources3inf10",
     "graph_type": "er",
     "artificial_graph_config": {
       "n": 1500,
@@ -9,15 +9,15 @@
     "overwrite_previous": false,
     "infection_config" : {
       "model": "SI",
-      "n_sources": 5,
-      "max_infected_fraction": 0.3,
+      "n_sources": 3,
+      "max_infected_fraction": 0.1,
       "params": {
         "beta": 0.01
       }
     }
   },
   {
-    "name": "rander1",
+    "name": "rander1sources3inf10",
     "graph_type": "er",
     "artificial_graph_config": {
       "n": 1500,
@@ -26,15 +26,15 @@
     "overwrite_previous": false,
     "infection_config" : {
       "model": "SI",
-      "n_sources": 5,
-      "max_infected_fraction": 0.3,
+      "n_sources": 3,
+      "max_infected_fraction": 0.1,
       "params": {
         "beta": 0.01
       }
     }
   },
   {
-    "name": "rander2",
+    "name": "rander2sources3inf10",
     "graph_type": "er",
     "artificial_graph_config": {
       "n": 1500,
@@ -43,15 +43,15 @@
     "overwrite_previous": false,
     "infection_config" : {
       "model": "SI",
-      "n_sources": 5,
-      "max_infected_fraction": 0.3,
+      "n_sources": 3,
+      "max_infected_fraction": 0.1,
       "params": {
         "beta": 0.01
       }
     }
   },
   {
-    "name": "rander3",
+    "name": "rander3sources3inf10",
     "graph_type": "er",
     "artificial_graph_config": {
       "n": 1500,
@@ -60,15 +60,15 @@
     "overwrite_previous": false,
     "infection_config" : {
       "model": "SI",
-      "n_sources": 5,
-      "max_infected_fraction": 0.3,
+      "n_sources": 3,
+      "max_infected_fraction": 0.1,
       "params": {
         "beta": 0.01
       }
     }
   },
   {
-    "name": "rander4",
+    "name": "rander4sources3inf10",
     "graph_type": "er",
     "artificial_graph_config": {
       "n": 1500,
@@ -77,15 +77,15 @@
     "overwrite_previous": false,
     "infection_config" : {
       "model": "SI",
-      "n_sources": 5,
-      "max_infected_fraction": 0.3,
+      "n_sources": 3,
+      "max_infected_fraction": 0.1,
       "params": {
         "beta": 0.01
       }
     }
   },
   {
-    "name": "rander5",
+    "name": "rander5sources3inf10",
     "graph_type": "er",
     "artificial_graph_config": {
       "n": 1500,
@@ -94,15 +94,15 @@
     "overwrite_previous": false,
     "infection_config" : {
       "model": "SI",
-      "n_sources": 5,
-      "max_infected_fraction": 0.3,
+      "n_sources": 3,
+      "max_infected_fraction": 0.1,
       "params": {
         "beta": 0.01
       }
     }
   },
   {
-    "name": "rander6",
+    "name": "rander6sources3inf10",
     "graph_type": "er",
     "artificial_graph_config": {
       "n": 1500,
@@ -111,15 +111,15 @@
     "overwrite_previous": false,
     "infection_config" : {
       "model": "SI",
-      "n_sources": 5,
-      "max_infected_fraction": 0.3,
+      "n_sources": 3,
+      "max_infected_fraction": 0.1,
       "params": {
         "beta": 0.01
       }
     }
   },
   {
-    "name": "rander7",
+    "name": "rander7sources3inf10",
     "graph_type": "er",
     "artificial_graph_config": {
       "n": 1500,
@@ -128,15 +128,15 @@
     "overwrite_previous": false,
     "infection_config" : {
       "model": "SI",
-      "n_sources": 5,
-      "max_infected_fraction": 0.3,
+      "n_sources": 3,
+      "max_infected_fraction": 0.1,
       "params": {
         "beta": 0.01
       }
     }
   },
   {
-    "name": "rander8",
+    "name": "rander8sources3inf10",
     "graph_type": "er",
     "artificial_graph_config": {
       "n": 1500,
@@ -145,15 +145,15 @@
     "overwrite_previous": false,
     "infection_config" : {
       "model": "SI",
-      "n_sources": 5,
-      "max_infected_fraction": 0.3,
+      "n_sources": 3,
+      "max_infected_fraction": 0.1,
       "params": {
         "beta": 0.01
       }
     }
   },
   {
-    "name": "rander9",
+    "name": "rander9sources3inf10",
     "graph_type": "er",
     "artificial_graph_config": {
       "n": 1500,
@@ -162,15 +162,15 @@
     "overwrite_previous": false,
     "infection_config" : {
       "model": "SI",
-      "n_sources": 5,
-      "max_infected_fraction": 0.3,
+      "n_sources": 3,
+      "max_infected_fraction": 0.1,
       "params": {
         "beta": 0.01
       }
     }
   },
   {
-    "name": "rander10",
+    "name": "rander10sources3inf10",
     "graph_type": "er",
     "artificial_graph_config": {
       "n": 1500,
@@ -179,15 +179,15 @@
     "overwrite_previous": false,
     "infection_config" : {
       "model": "SI",
-      "n_sources": 5,
-      "max_infected_fraction": 0.3,
+      "n_sources": 3,
+      "max_infected_fraction": 0.1,
       "params": {
         "beta": 0.01
       }
     }
   },
   {
-    "name": "rander11",
+    "name": "rander11sources3inf10",
     "graph_type": "er",
     "artificial_graph_config": {
       "n": 1500,
@@ -196,15 +196,15 @@
     "overwrite_previous": false,
     "infection_config" : {
       "model": "SI",
-      "n_sources": 5,
-      "max_infected_fraction": 0.3,
+      "n_sources": 3,
+      "max_infected_fraction": 0.1,
       "params": {
         "beta": 0.01
       }
     }
   },
   {
-    "name": "rander12",
+    "name": "rander12sources3inf10",
     "graph_type": "er",
     "artificial_graph_config": {
       "n": 1500,
@@ -213,15 +213,15 @@
     "overwrite_previous": false,
     "infection_config" : {
       "model": "SI",
-      "n_sources": 5,
-      "max_infected_fraction": 0.3,
+      "n_sources": 3,
+      "max_infected_fraction": 0.1,
       "params": {
         "beta": 0.01
       }
     }
   },
   {
-    "name": "rander13",
+    "name": "rander13sources3inf10",
     "graph_type": "er",
     "artificial_graph_config": {
       "n": 1500,
@@ -230,15 +230,15 @@
     "overwrite_previous": false,
     "infection_config" : {
       "model": "SI",
-      "n_sources": 5,
-      "max_infected_fraction": 0.3,
+      "n_sources": 3,
+      "max_infected_fraction": 0.1,
       "params": {
         "beta": 0.01
       }
     }
   },
   {
-    "name": "rander14",
+    "name": "rander14sources3inf10",
     "graph_type": "er",
     "artificial_graph_config": {
       "n": 1500,
@@ -247,15 +247,15 @@
     "overwrite_previous": false,
     "infection_config" : {
       "model": "SI",
-      "n_sources": 5,
-      "max_infected_fraction": 0.3,
+      "n_sources": 3,
+      "max_infected_fraction": 0.1,
       "params": {
         "beta": 0.01
       }
     }
   },
   {
-    "name": "rander15",
+    "name": "rander15sources3inf10",
     "graph_type": "er",
     "artificial_graph_config": {
       "n": 1500,
@@ -264,15 +264,15 @@
     "overwrite_previous": false,
     "infection_config" : {
       "model": "SI",
-      "n_sources": 5,
-      "max_infected_fraction": 0.3,
+      "n_sources": 3,
+      "max_infected_fraction": 0.1,
       "params": {
         "beta": 0.01
       }
     }
   },
   {
-    "name": "rander16",
+    "name": "rander16sources3inf10",
     "graph_type": "er",
     "artificial_graph_config": {
       "n": 1500,
@@ -281,15 +281,15 @@
     "overwrite_previous": false,
     "infection_config" : {
       "model": "SI",
-      "n_sources": 5,
-      "max_infected_fraction": 0.3,
+      "n_sources": 3,
+      "max_infected_fraction": 0.1,
       "params": {
         "beta": 0.01
       }
     }
   },
   {
-    "name": "rander17",
+    "name": "rander17sources3inf10",
     "graph_type": "er",
     "artificial_graph_config": {
       "n": 1500,
@@ -298,15 +298,15 @@
     "overwrite_previous": false,
     "infection_config" : {
       "model": "SI",
-      "n_sources": 5,
-      "max_infected_fraction": 0.3,
+      "n_sources": 3,
+      "max_infected_fraction": 0.1,
       "params": {
         "beta": 0.01
       }
     }
   },
   {
-    "name": "rander18",
+    "name": "rander18sources3inf10",
     "graph_type": "er",
     "artificial_graph_config": {
       "n": 1500,
@@ -315,15 +315,15 @@
     "overwrite_previous": false,
     "infection_config" : {
       "model": "SI",
-      "n_sources": 5,
-      "max_infected_fraction": 0.3,
+      "n_sources": 3,
+      "max_infected_fraction": 0.1,
       "params": {
         "beta": 0.01
       }
     }
   },
   {
-    "name": "rander19",
+    "name": "rander19sources3inf10",
     "graph_type": "er",
     "artificial_graph_config": {
       "n": 1500,
@@ -332,8 +332,8 @@
     "overwrite_previous": false,
     "infection_config" : {
       "model": "SI",
-      "n_sources": 5,
-      "max_infected_fraction": 0.3,
+      "n_sources": 3,
+      "max_infected_fraction": 0.1,
       "params": {
         "beta": 0.01
       }

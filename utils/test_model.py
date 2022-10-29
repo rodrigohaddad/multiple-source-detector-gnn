@@ -1,5 +1,6 @@
 import torch
 import pickle
+import numpy as np
 
 from utils.constants import INFECTED_DIR
 
@@ -26,8 +27,17 @@ def test_embedding(model, data, no_weight):
 def test_pred(model, data):
     model.eval()
     _, out = model(data.x, data.edge_index)
-    y_pred = out.argmax(dim=1)
-    return y_pred
+    # out.size(dim=1)
+    # y_pred = out.argmax(dim=1)
+    # return y_pred
+
+    out_np = torch.clone(out.squeeze(dim=1))
+    indices = torch.topk(out_np, 5).indices
+    out_np.zero_()
+    # y_pred = torch.where(out_np < out_np.mean()*1.9, 0, 1)
+    for idx in indices:
+        out_np[idx] = 1
+    return out_np
 
 
 def concatenate_sources(file, filename, sources, conj_emb, emb=None):

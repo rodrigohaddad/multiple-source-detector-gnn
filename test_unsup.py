@@ -4,13 +4,13 @@ import pickle
 import torch
 from sklearn.metrics import accuracy_score
 
-from utils.constants import MODEL_GRAPH_DIR, GLOBAL_MODEL_FILE, NOT_TRANSFORMED_DIR
+from utils.constants import MODEL_GRAPH_DIR, NOT_TRANSFORMED_DIR, GRAPH_UNSUP_TRANS_FILE
 from utils.test_model import test_embedding, concatenate_sources
 
 
 def main():
     # Load embedding model
-    sage = pickle.load(open(f'{MODEL_GRAPH_DIR}{GLOBAL_MODEL_FILE}', 'rb'))
+    sage = pickle.load(open(f'{MODEL_GRAPH_DIR}{GRAPH_UNSUP_TRANS_FILE}', 'rb'))
 
     # Load classifier model
     clf = pickle.load(open(f'{MODEL_GRAPH_DIR}/node_classifier.pickle', 'rb'))
