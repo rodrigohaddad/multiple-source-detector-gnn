@@ -1,7 +1,80 @@
 [
   {
-    "name": "rander0sources3inf10",
+    "name": "rander",
     "graph_type": "er",
+    "n_graphs": 20,
+    "artificial_graph_config": {
+      "n": 1500,
+      "p": 0.0141
+    },
+    "overwrite_previous": false,
+    "infection_config" : {
+      "model": "SI",
+      "n_sources": 1,
+      "max_infected_fraction": 0.05,
+      "params": {
+        "beta": 0.01
+      }
+    }
+  },
+  {
+    "name": "rander",
+    "graph_type": "er",
+    "n_graphs": 20,
+    "artificial_graph_config": {
+      "n": 1500,
+      "p": 0.0141
+    },
+    "overwrite_previous": false,
+    "infection_config" : {
+      "model": "SI",
+      "n_sources": 3,
+      "max_infected_fraction": 0.05,
+      "params": {
+        "beta": 0.01
+      }
+    }
+  },
+  {
+    "name": "rander",
+    "graph_type": "er",
+    "n_graphs": 20,
+    "artificial_graph_config": {
+      "n": 1500,
+      "p": 0.0141
+    },
+    "overwrite_previous": false,
+    "infection_config" : {
+      "model": "SI",
+      "n_sources": 5,
+      "max_infected_fraction": 0.05,
+      "params": {
+        "beta": 0.01
+      }
+    }
+  },
+  {
+    "name": "rander",
+    "graph_type": "er",
+    "n_graphs": 20,
+    "artificial_graph_config": {
+      "n": 1500,
+      "p": 0.0141
+    },
+    "overwrite_previous": false,
+    "infection_config" : {
+      "model": "SI",
+      "n_sources": 7,
+      "max_infected_fraction": 0.05,
+      "params": {
+        "beta": 0.01
+      }
+    }
+  },
+  {
+    "name": "rander",
+    "graph_type": "er",
+    "n_graphs": 20,
     "artificial_graph_config": {
       "n": 1500,
       "p": 0.0141
@@ -17,8 +90,9 @@
     }
   },
   {
-    "name": "rander1sources3inf10",
+    "name": "rander",
     "graph_type": "er",
+    "n_graphs": 20,
     "artificial_graph_config": {
       "n": 1500,
       "p": 0.0141
@@ -27,15 +101,16 @@
     "infection_config" : {
       "model": "SI",
       "n_sources": 3,
-      "max_infected_fraction": 0.1,
+      "max_infected_fraction": 0.15,
       "params": {
         "beta": 0.01
       }
     }
   },
   {
-    "name": "rander2sources3inf10",
+    "name": "rander",
     "graph_type": "er",
+    "n_graphs": 20,
     "artificial_graph_config": {
       "n": 1500,
       "p": 0.0141
@@ -44,296 +119,7 @@
     "infection_config" : {
       "model": "SI",
       "n_sources": 3,
-      "max_infected_fraction": 0.1,
-      "params": {
-        "beta": 0.01
-      }
-    }
-  },
-  {
-    "name": "rander3sources3inf10",
-    "graph_type": "er",
-    "artificial_graph_config": {
-      "n": 1500,
-      "p": 0.0141
-    },
-    "overwrite_previous": false,
-    "infection_config" : {
-      "model": "SI",
-      "n_sources": 3,
-      "max_infected_fraction": 0.1,
-      "params": {
-        "beta": 0.01
-      }
-    }
-  },
-  {
-    "name": "rander4sources3inf10",
-    "graph_type": "er",
-    "artificial_graph_config": {
-      "n": 1500,
-      "p": 0.0141
-    },
-    "overwrite_previous": false,
-    "infection_config" : {
-      "model": "SI",
-      "n_sources": 3,
-      "max_infected_fraction": 0.1,
-      "params": {
-        "beta": 0.01
-      }
-    }
-  },
-  {
-    "name": "rander5sources3inf10",
-    "graph_type": "er",
-    "artificial_graph_config": {
-      "n": 1500,
-      "p": 0.0141
-    },
-    "overwrite_previous": false,
-    "infection_config" : {
-      "model": "SI",
-      "n_sources": 3,
-      "max_infected_fraction": 0.1,
-      "params": {
-        "beta": 0.01
-      }
-    }
-  },
-  {
-    "name": "rander6sources3inf10",
-    "graph_type": "er",
-    "artificial_graph_config": {
-      "n": 1500,
-      "p": 0.0141
-    },
-    "overwrite_previous": false,
-    "infection_config" : {
-      "model": "SI",
-      "n_sources": 3,
-      "max_infected_fraction": 0.1,
-      "params": {
-        "beta": 0.01
-      }
-    }
-  },
-  {
-    "name": "rander7sources3inf10",
-    "graph_type": "er",
-    "artificial_graph_config": {
-      "n": 1500,
-      "p": 0.0141
-    },
-    "overwrite_previous": false,
-    "infection_config" : {
-      "model": "SI",
-      "n_sources": 3,
-      "max_infected_fraction": 0.1,
-      "params": {
-        "beta": 0.01
-      }
-    }
-  },
-  {
-    "name": "rander8sources3inf10",
-    "graph_type": "er",
-    "artificial_graph_config": {
-      "n": 1500,
-      "p": 0.0141
-    },
-    "overwrite_previous": false,
-    "infection_config" : {
-      "model": "SI",
-      "n_sources": 3,
-      "max_infected_fraction": 0.1,
-      "params": {
-        "beta": 0.01
-      }
-    }
-  },
-  {
-    "name": "rander9sources3inf10",
-    "graph_type": "er",
-    "artificial_graph_config": {
-      "n": 1500,
-      "p": 0.0141
-    },
-    "overwrite_previous": false,
-    "infection_config" : {
-      "model": "SI",
-      "n_sources": 3,
-      "max_infected_fraction": 0.1,
-      "params": {
-        "beta": 0.01
-      }
-    }
-  },
-  {
-    "name": "rander10sources3inf10",
-    "graph_type": "er",
-    "artificial_graph_config": {
-      "n": 1500,
-      "p": 0.0141
-    },
-    "overwrite_previous": false,
-    "infection_config" : {
-      "model": "SI",
-      "n_sources": 3,
-      "max_infected_fraction": 0.1,
-      "params": {
-        "beta": 0.01
-      }
-    }
-  },
-  {
-    "name": "rander11sources3inf10",
-    "graph_type": "er",
-    "artificial_graph_config": {
-      "n": 1500,
-      "p": 0.0141
-    },
-    "overwrite_previous": false,
-    "infection_config" : {
-      "model": "SI",
-      "n_sources": 3,
-      "max_infected_fraction": 0.1,
-      "params": {
-        "beta": 0.01
-      }
-    }
-  },
-  {
-    "name": "rander12sources3inf10",
-    "graph_type": "er",
-    "artificial_graph_config": {
-      "n": 1500,
-      "p": 0.0141
-    },
-    "overwrite_previous": false,
-    "infection_config" : {
-      "model": "SI",
-      "n_sources": 3,
-      "max_infected_fraction": 0.1,
-      "params": {
-        "beta": 0.01
-      }
-    }
-  },
-  {
-    "name": "rander13sources3inf10",
-    "graph_type": "er",
-    "artificial_graph_config": {
-      "n": 1500,
-      "p": 0.0141
-    },
-    "overwrite_previous": false,
-    "infection_config" : {
-      "model": "SI",
-      "n_sources": 3,
-      "max_infected_fraction": 0.1,
-      "params": {
-        "beta": 0.01
-      }
-    }
-  },
-  {
-    "name": "rander14sources3inf10",
-    "graph_type": "er",
-    "artificial_graph_config": {
-      "n": 1500,
-      "p": 0.0141
-    },
-    "overwrite_previous": false,
-    "infection_config" : {
-      "model": "SI",
-      "n_sources": 3,
-      "max_infected_fraction": 0.1,
-      "params": {
-        "beta": 0.01
-      }
-    }
-  },
-  {
-    "name": "rander15sources3inf10",
-    "graph_type": "er",
-    "artificial_graph_config": {
-      "n": 1500,
-      "p": 0.0141
-    },
-    "overwrite_previous": false,
-    "infection_config" : {
-      "model": "SI",
-      "n_sources": 3,
-      "max_infected_fraction": 0.1,
-      "params": {
-        "beta": 0.01
-      }
-    }
-  },
-  {
-    "name": "rander16sources3inf10",
-    "graph_type": "er",
-    "artificial_graph_config": {
-      "n": 1500,
-      "p": 0.0141
-    },
-    "overwrite_previous": false,
-    "infection_config" : {
-      "model": "SI",
-      "n_sources": 3,
-      "max_infected_fraction": 0.1,
-      "params": {
-        "beta": 0.01
-      }
-    }
-  },
-  {
-    "name": "rander17sources3inf10",
-    "graph_type": "er",
-    "artificial_graph_config": {
-      "n": 1500,
-      "p": 0.0141
-    },
-    "overwrite_previous": false,
-    "infection_config" : {
-      "model": "SI",
-      "n_sources": 3,
-      "max_infected_fraction": 0.1,
-      "params": {
-        "beta": 0.01
-      }
-    }
-  },
-  {
-    "name": "rander18sources3inf10",
-    "graph_type": "er",
-    "artificial_graph_config": {
-      "n": 1500,
-      "p": 0.0141
-    },
-    "overwrite_previous": false,
-    "infection_config" : {
-      "model": "SI",
-      "n_sources": 3,
-      "max_infected_fraction": 0.1,
-      "params": {
-        "beta": 0.01
-      }
-    }
-  },
-  {
-    "name": "rander19sources3inf10",
-    "graph_type": "er",
-    "artificial_graph_config": {
-      "n": 1500,
-      "p": 0.0141
-    },
-    "overwrite_previous": false,
-    "infection_config" : {
-      "model": "SI",
-      "n_sources": 3,
-      "max_infected_fraction": 0.1,
+      "max_infected_fraction": 0.20,
       "params": {
         "beta": 0.01
       }

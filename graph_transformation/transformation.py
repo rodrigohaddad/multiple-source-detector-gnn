@@ -15,7 +15,7 @@ from datetime import datetime
 class GraphTransform:
     threads = 5
 
-    def __init__(self, g_inf, k: int, percentile: int, alpha_weight: float, keep_old: bool):
+    def __init__(self, g_inf, k: int, percentile: int, alpha_weight: float, keep_old: bool, file_name: str):
         self.eta_dict = dict()
         self.alpha_dict = dict()
         self.keep_old = keep_old
@@ -41,9 +41,11 @@ class GraphTransform:
         print(f'Transformed graph n nodes: {self.G_new.number_of_nodes()}')
 
         pyg_data = read_as_pyg_data(self.G_new)
+
+        graph_config = g_inf.graph_config
         save_to_pickle(pyg_data,
-                       'graph_not_transformed_3s_10inf' if keep_old else 'graph_transformed',
-                       f"{g_inf.graph_config.name}-{'not-transformed' if keep_old else 'transformed'}")
+                       f"graph_enriched/{graph_config.graph_type}_{int(100 * graph_config.infection_config.max_infected_fraction)}inf_{graph_config.infection_config.n_sources}s{'/test' if int(file_name.split('-')[0])>9 else ''}",
+                       f"{file_name.split('.')[0]}-enriched")
         del pyg_data
 
         print('')

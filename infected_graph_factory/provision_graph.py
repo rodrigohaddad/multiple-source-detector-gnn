@@ -15,6 +15,7 @@ class InfectedGraphProvision:
     trends = None
 
     def __init__(self,
+                 idx,
                  graph,
                  graph_config):
         self.G = graph
@@ -33,8 +34,9 @@ class InfectedGraphProvision:
         if infection_config.model in SI_TRANSFORMATION:
             self._convert_removed_to_not_infected()
 
-        save_to_pickle(self, 'infected_graph',
-                       f'{graph_config.name}-infected')
+        save_to_pickle(self,
+                       f'infected_graph/{graph_config.graph_type}_{int(100*graph_config.infection_config.max_infected_fraction)}inf_{graph_config.infection_config.n_sources}s',
+                       f'{idx}-{graph_config.graph_type}{int(100*graph_config.infection_config.max_infected_fraction)}inf{graph_config.infection_config.n_sources}s-infected')
 
     def _add_edge_config(self, param_value, param_name):
         for e in self.G.edges():
