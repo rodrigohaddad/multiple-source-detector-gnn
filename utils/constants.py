@@ -6,7 +6,7 @@ EMBEDDING_DIR = 'data/embedding'
 INFECTED_DIR = 'data/infected_graph'
 
 TRANSFORMED_DIR = 'data/graph_transformed'
-NOT_TRANSFORMED_DIR = 'data/graph_not_transformed_3s_10inf'
+NOT_TRANSFORMED_DIR = 'data/graph_enriched'
 
 GRAPH_ENRICHED = ['data/graph_enriched/er_5inf_1s', 'data/graph_enriched/er_5inf_3s',
                   'data/graph_enriched/er_5inf_5s', 'data/graph_enriched/er_5inf_7s',

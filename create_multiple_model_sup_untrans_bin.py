@@ -10,38 +10,37 @@ from utils.save_to_pickle import save_to_pickle
 
 
 def main():
-    try:
-        model = pickle.load(open(f'{MODEL_GRAPH_DIR}{GRAPH_SUP_UNTRANS_BIN_FULL_2_LAYERS_FILE}', 'rb'))
-    except:
+    for filename in os.listdir(NOT_TRANSFORMED_DIR):
         model = SUSAGEBin(dim_in=9,  # data.num_node_features
                           dim_h=128,  # 64
                           dim_out=1,
                           n_layers=3,
                           aggr='max')
-    model = model.to(DEVICE)
+        model = model.to(DEVICE)
 
-    for filename in os.listdir(NOT_TRANSFORMED_DIR):
-        file = os.path.join(NOT_TRANSFORMED_DIR, filename)
-        if not os.path.isfile(file):
-            continue
+        path = os.path.join(NOT_TRANSFORMED_DIR, filename)
+        for file in os.listdir(path):
+            file_path = os.path.join(path, file)
+            if not os.path.isfile(file_path):
+                continue
 
-        # Data
-        data = pickle.load(open(file, 'rb'))
-        data.y = data.x[:, -1].float()
-        data.x = data.x[:, :-1].float()
+            # Data
+            data = pickle.load(open(file_path, 'rb'))
+            data.y = data.x[:, -1].float()
+            data.x = data.x[:, :-1].float()
 
-        # testar com directed=False
-        train_loader = NeighborLoader(
-            data,
-            # num_neighbors=[-1, 10, 10], # todos de todos (duas camadas)
-            num_neighbors=[-1, -1, -1],
-            batch_size=1500,
-            directed=False,
-        )
+            # testar com directed=False
+            train_loader = NeighborLoader(
+                data,
+                # num_neighbors=[-1, 10, 10], # todos de todos (duas camadas)
+                num_neighbors=[-1, -1, -1],
+                batch_size=1500,
+                directed=False,
+            )
 
-        model.fit(data, 500, train_loader)
+            model.fit(data, 500, train_loader)
 
-    save_to_pickle(model, 'model', GRAPH_SUP_UNTRANS_BIN_FULL_2_LAYERS_FILE.split('.')[0])
+        save_to_pickle(model, 'model', f'graph-sage-{filename}')
 
 
 if __name__ == '__main__':
