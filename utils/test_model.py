@@ -24,7 +24,7 @@ def test_embedding(model, data, no_weight):
 
 
 @torch.no_grad()
-def test_pred(model, data):
+def test_pred(model, data, sources):
     model.eval()
     _, out = model(data.x, data.edge_index)
     # out.size(dim=1)
@@ -32,12 +32,13 @@ def test_pred(model, data):
     # return y_pred
 
     out_np = torch.clone(out.squeeze(dim=1))
-    indices = torch.topk(out_np, 5).indices
+    indices = torch.topk(out_np, sources).indices
+
     out_np.zero_()
     # y_pred = torch.where(out_np < out_np.mean()*1.9, 0, 1)
     for idx in indices:
         out_np[idx] = 1
-    return out_np
+    return out_np, indices
 
 
 def concatenate_sources(file, filename, sources, conj_emb, emb=None):
