@@ -51,7 +51,7 @@ def main():
         sage_model_name = f'graph-sage-{enriched_path.split("/")[-1]}.pickle'
         sage = pickle.load(open(f'{MODEL_GRAPH_DIR}{sage_model_name}', 'rb'))
         sources = int(enriched_path[-2])
-        infection = '_'.split(enriched_path)[1][-4:]
+        infection = int(enriched_path.split('_')[2][:len(enriched_path.split('_')[2])-3])
         for top_k in TOP_K[sources]:
             data_plot = {'FPR': [], 'FNR': [], 'F-score': [], 'Precision': [], 'Recall': []}
             index = []
@@ -116,13 +116,13 @@ def main():
 
             axes = df.plot.bar(rot=0, subplots=True, grid=True,
                                color=['#FEBCC8', '#C8CFE7', '#C7E5C6'],
-                               title=f'Train set - {sources} sources - Top {top_k}')
+                               title=f'Train set - {sources} sources - Top {top_k}') # Test
             axes[1].legend(loc=2)
             axes[0].set_title(f'Precision M:{precision_arr.mean():.4f} V:{precision_arr.var():.4f}')
             axes[1].set_title(f'Recall M:{recall_arr.mean():.4f} V:{recall_arr.var():.4f}')
             axes[2].set_title(f'F-score M:{f_score_arr.mean():.4f} V:{f_score_arr.var():.4f}')
             plt.savefig(f"data/figures/{enriched_path.split('/')[-1]}/{'nb/' if MAKE_NEIGHBORS_POSITIVE else ''}{enriched_path.split('/')[-1]}-train-{top_k}topk",
-                        dpi=120)
+                        dpi=120) #test
 
             metrics_result['n_sources'].append(sources)
             metrics_result['top_k'].append(top_k)
@@ -131,7 +131,7 @@ def main():
             metrics_result['recall_mean'].append(recall_arr.mean())
             metrics_result['f_score_mean'].append(f_score_arr.mean())
 
-    f = open(f'metrics_output_train{"_nb" if MAKE_NEIGHBORS_POSITIVE else ""}.json', 'w')
+    f = open(f'data/metrics_output_train{"_nb" if MAKE_NEIGHBORS_POSITIVE else ""}.json', 'w') #/test
     f.write(json.dumps(metrics_result))
 
 

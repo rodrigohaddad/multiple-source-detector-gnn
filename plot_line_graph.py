@@ -4,6 +4,8 @@ import matplotlib.pyplot as plt
 
 
 def main():
+    aa = {'n_sources': [1, 1], 'top_k': [1, 2], 'precision_mean': [0.5, 0.5], 'recall_mean': [0.5, 0.6], 'infection_percentage': ['enriched', 'enriched'], 'f_score_mean': [0.5, 0.5333333373069763]}
+
     data_preproc = pd.DataFrame({
         'Year': [1, 2, 3, 4, 5],
         'A': [1, 1, 2, 4, 5],
