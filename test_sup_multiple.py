@@ -1,14 +1,14 @@
+import json
 import os
 import pickle
 import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
 
-from torch_geometric.utils import accuracy, f1_score, false_positive, true_positive, precision, recall, k_hop_subgraph
+from torch_geometric.utils import accuracy, f1_score, false_positive, true_positive, precision, recall
 from sklearn.metrics import f1_score as sk_f1_score
 
-from utils.constants import MODEL_GRAPH_DIR, GRAPH_SUP_UNTRANS_FILE, NOT_TRANSFORMED_DIR, GRAPH_SUP_UNTRANS_BIN_FILE, \
-    GRAPH_SUP_UNTRANS_BIN_FULL_2_LAYERS_FILE, GRAPH_ENRICHED
+from utils.constants import MODEL_GRAPH_DIR, GRAPH_ENRICHED, TOP_K, MAKE_NEIGHBORS_POSITIVE
 from utils.test_model import test_pred
 
 
@@ -27,13 +27,32 @@ def calculate_neighborhood_rate(data, indices_pred):
     print("aa")
 
 
+def make_neighborhood_positive(data, pred_index_sources):
+    sources = np.argwhere(data.y > 0)[0]
+    neighbors_of_sources = np.array([])
+    for source in sources:
+        nb_source_idx_0 = data.edge_index[1][np.argwhere(data.edge_index[0] == int(source))[0]]
+        neighbors_of_sources = np.append(neighbors_of_sources, nb_source_idx_0)
+
+    # May be discontinued
+    intersection = np.intersect1d(neighbors_of_sources, pred_index_sources)
+
+    y = data.y.clone().detach()
+    y[intersection] = 1
+    return y
+
+
 def main():
+    metrics_result = {'n_sources': [], 'top_k': [],
+                      'precision_mean': [], 'recall_mean': [],
+                      'infection_percentage': [], 'f_score_mean': []}
     # Load test graphs
-    for path, enriched_path in zip(os.listdir(f"{NOT_TRANSFORMED_DIR}"), GRAPH_ENRICHED):
+    for enriched_path in GRAPH_ENRICHED:
         sage_model_name = f'graph-sage-{enriched_path.split("/")[-1]}.pickle'
         sage = pickle.load(open(f'{MODEL_GRAPH_DIR}{sage_model_name}', 'rb'))
-        for top_k in [int(enriched_path[-2]), 10, 25, 50, 100]:
-            file = os.path.join(f"{NOT_TRANSFORMED_DIR}", path)
+        sources = int(enriched_path[-2])
+        infection = '_'.split(enriched_path)[1][-4:]
+        for top_k in TOP_K[sources]:
             data_plot = {'FPR': [], 'FNR': [], 'F-score': [], 'Precision': [], 'Recall': []}
             index = []
             fpr_arr = np.array([])
@@ -42,8 +61,8 @@ def main():
             precision_arr = np.array([])
             recall_arr = np.array([])
 
-            for i, filename in enumerate(os.listdir(file)):
-                graph_file = os.path.join(file, filename)
+            for i, filename in enumerate(os.listdir(f'{enriched_path}')):  # /test
+                graph_file = os.path.join(f'{enriched_path}', filename)  # /test
                 if not os.path.isfile(graph_file):
                     continue
 
@@ -56,18 +75,18 @@ def main():
                 # Apply embedding model
                 y_pred, indices = test_pred(sage, data, sources=top_k)
 
+                y = data.y if not MAKE_NEIGHBORS_POSITIVE else make_neighborhood_positive(data, indices)
+
                 # Eval
-                acc = accuracy(data.y, y_pred)
-                f_score = f1_score(y_pred, data.y, 2)
-                sk_f = sk_f1_score(data.y, y_pred, average='micro')
+                acc = accuracy(y, y_pred)
+                f_score = f1_score(y_pred, y, 2)
+                sk_f = sk_f1_score(y, y_pred, average='micro')
 
-                calculate_neighborhood_rate(data, indices)
+                fn, fp = false_positive(y_pred, y, 2)
+                tn, tp = true_positive(y_pred, y, 2)
 
-                fn, fp = false_positive(y_pred, data.y, 2)
-                tn, tp = true_positive(y_pred, data.y, 2)
-
-                prc = precision(y_pred, data.y, 2)
-                rec = recall(y_pred, data.y, 2)
+                prc = precision(y_pred, y, 2)
+                rec = recall(y_pred, y, 2)
 
                 print(f'N sources pred: {sum(y_pred)}')
                 print(f'Acc: {acc}, F_score: {f_score}, {sk_f}')
@@ -97,13 +116,23 @@ def main():
 
             axes = df.plot.bar(rot=0, subplots=True, grid=True,
                                color=['#FEBCC8', '#C8CFE7', '#C7E5C6'],
-                               title=f'Supervised - Train set - {top_k} sources')
+                               title=f'Train set - {sources} sources - Top {top_k}')
             axes[1].legend(loc=2)
             axes[0].set_title(f'Precision M:{precision_arr.mean():.4f} V:{precision_arr.var():.4f}')
             axes[1].set_title(f'Recall M:{recall_arr.mean():.4f} V:{recall_arr.var():.4f}')
             axes[2].set_title(f'F-score M:{f_score_arr.mean():.4f} V:{f_score_arr.var():.4f}')
-            plt.savefig(f"data/figures/{enriched_path.split('/')[-1]}/{enriched_path.split('/')[-1]}-train-{top_k}topk",
+            plt.savefig(f"data/figures/{enriched_path.split('/')[-1]}/{'nb/' if MAKE_NEIGHBORS_POSITIVE else ''}{enriched_path.split('/')[-1]}-train-{top_k}topk",
                         dpi=120)
+
+            metrics_result['n_sources'].append(sources)
+            metrics_result['top_k'].append(top_k)
+            metrics_result['infection_percentage'].append(infection)
+            metrics_result['precision_mean'].append(precision_arr.mean())
+            metrics_result['recall_mean'].append(recall_arr.mean())
+            metrics_result['f_score_mean'].append(f_score_arr.mean())
+
+    f = open(f'metrics_output_train{"_nb" if MAKE_NEIGHBORS_POSITIVE else ""}.json', 'w')
+    f.write(json.dumps(metrics_result))
 
 
 if __name__ == '__main__':
