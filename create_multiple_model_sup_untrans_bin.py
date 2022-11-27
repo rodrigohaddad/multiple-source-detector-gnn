@@ -4,8 +4,7 @@ import pickle
 from torch_geometric.loader import NeighborLoader
 
 from gnn_embedding.gnn_sup_untrans_bin import SUSAGEBin
-from utils.constants import DEVICE, MODEL_GRAPH_DIR, NOT_TRANSFORMED_DIR, \
-    GRAPH_SUP_UNTRANS_BIN_FILE, GRAPH_SUP_UNTRANS_BIN_FULL_2_LAYERS_FILE
+from utils.constants import DEVICE, NOT_TRANSFORMED_DIR
 from utils.save_to_pickle import save_to_pickle
 
 

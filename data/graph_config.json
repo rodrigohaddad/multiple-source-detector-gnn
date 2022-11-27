@@ -10,97 +10,7 @@
     "overwrite_previous": false,
     "infection_config" : {
       "model": "SI",
-      "n_sources": 1,
-      "max_infected_fraction": 0.05,
-      "params": {
-        "beta": 0.01
-      }
-    }
-  },
-  {
-    "name": "rander",
-    "graph_type": "er",
-    "n_graphs": 20,
-    "artificial_graph_config": {
-      "n": 1500,
-      "p": 0.0141
-    },
-    "overwrite_previous": false,
-    "infection_config" : {
-      "model": "SI",
-      "n_sources": 3,
-      "max_infected_fraction": 0.05,
-      "params": {
-        "beta": 0.01
-      }
-    }
-  },
-  {
-    "name": "rander",
-    "graph_type": "er",
-    "n_graphs": 20,
-    "artificial_graph_config": {
-      "n": 1500,
-      "p": 0.0141
-    },
-    "overwrite_previous": false,
-    "infection_config" : {
-      "model": "SI",
-      "n_sources": 5,
-      "max_infected_fraction": 0.05,
-      "params": {
-        "beta": 0.01
-      }
-    }
-  },
-  {
-    "name": "rander",
-    "graph_type": "er",
-    "n_graphs": 20,
-    "artificial_graph_config": {
-      "n": 1500,
-      "p": 0.0141
-    },
-    "overwrite_previous": false,
-    "infection_config" : {
-      "model": "SI",
-      "n_sources": 7,
-      "max_infected_fraction": 0.05,
-      "params": {
-        "beta": 0.01
-      }
-    }
-  },
-  {
-    "name": "rander",
-    "graph_type": "er",
-    "n_graphs": 20,
-    "artificial_graph_config": {
-      "n": 1500,
-      "p": 0.0141
-    },
-    "overwrite_previous": false,
-    "infection_config" : {
-      "model": "SI",
-      "n_sources": 3,
-      "max_infected_fraction": 0.1,
-      "params": {
-        "beta": 0.01
-      }
-    }
-  },
-  {
-    "name": "rander",
-    "graph_type": "er",
-    "n_graphs": 20,
-    "artificial_graph_config": {
-      "n": 1500,
-      "p": 0.0141
-    },
-    "overwrite_previous": false,
-    "infection_config" : {
-      "model": "SI",
-      "n_sources": 3,
+      "n_sources": 10,
       "max_infected_fraction": 0.15,
       "params": {
         "beta": 0.01
@@ -118,8 +28,26 @@
     "overwrite_previous": false,
     "infection_config" : {
       "model": "SI",
-      "n_sources": 3,
-      "max_infected_fraction": 0.20,
+      "n_sources": 15,
+      "max_infected_fraction": 0.15,
+      "params": {
+        "beta": 0.01
+      }
+    }
+  },
+  {
+    "name": "rander",
+    "graph_type": "er",
+    "n_graphs": 20,
+    "artificial_graph_config": {
+      "n": 1500,
+      "p": 0.0141
+    },
+    "overwrite_previous": false,
+    "infection_config" : {
+      "model": "SI",
+      "n_sources": 20,
+      "max_infected_fraction": 0.15,
       "params": {
         "beta": 0.01
       }

@@ -4,7 +4,6 @@ from sklearn.utils import class_weight
 from torch_geometric.nn import SAGEConv
 import torch.nn.functional as F
 import torch.nn as nn
-from torch_geometric.utils import accuracy
 
 
 # Supervised, not transformed graph

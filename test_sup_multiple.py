@@ -4,8 +4,8 @@ import pickle
 import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
+import torchmetrics
 
-from torch_geometric.utils import accuracy, f1_score, false_positive, true_positive, precision, recall
 from sklearn.metrics import f1_score as sk_f1_score
 
 from utils.constants import MODEL_GRAPH_DIR, GRAPH_ENRICHED, TOP_K, MAKE_NEIGHBORS_POSITIVE
@@ -35,10 +35,10 @@ def make_neighborhood_positive(data, pred_index_sources):
         neighbors_of_sources = np.append(neighbors_of_sources, nb_source_idx_0)
 
     # May be discontinued
-    intersection = np.intersect1d(neighbors_of_sources, pred_index_sources)
+    # intersection = np.intersect1d(neighbors_of_sources, pred_index_sources)
 
     y = data.y.clone().detach()
-    y[intersection] = 1
+    y[neighbors_of_sources] = 1
     return y
 
 
@@ -50,7 +50,7 @@ def main():
     for enriched_path in GRAPH_ENRICHED:
         sage_model_name = f'graph-sage-{enriched_path.split("/")[-1]}.pickle'
         sage = pickle.load(open(f'{MODEL_GRAPH_DIR}{sage_model_name}', 'rb'))
-        sources = int(enriched_path[-2])
+        sources = int(enriched_path.split('_')[3][:-1])
         infection = int(enriched_path.split('_')[2][:len(enriched_path.split('_')[2])-3])
         for top_k in TOP_K[sources]:
             data_plot = {'FPR': [], 'FNR': [], 'F-score': [], 'Precision': [], 'Recall': []}
@@ -78,36 +78,41 @@ def main():
                 y = data.y if not MAKE_NEIGHBORS_POSITIVE else make_neighborhood_positive(data, indices)
 
                 # Eval
-                acc = accuracy(y, y_pred)
-                f_score = f1_score(y_pred, y, 2)
-                sk_f = sk_f1_score(y, y_pred, average='micro')
+                acc = torchmetrics.functional.accuracy(y_pred, y)
+                f_score = torchmetrics.functional.f1_score(y_pred, y)
+                # sk_f = sk_f1_score(y, y_pred, average='micro')
 
-                fn, fp = false_positive(y_pred, y, 2)
-                tn, tp = true_positive(y_pred, y, 2)
+                roc = torchmetrics.ROC()
+                fpr, tpr, thresholds = roc(y_pred, y)
+                fpr = fpr[1]
+                tpr = tpr[1]
 
-                prc = precision(y_pred, y, 2)
-                rec = recall(y_pred, y, 2)
+                fnr = 1 - tpr
+                tnr = 1 - fpr
+
+                prc = torchmetrics.functional.precision(y_pred, y)
+                rec = torchmetrics.functional.recall(y_pred, y)
 
                 print(f'N sources pred: {sum(y_pred)}')
-                print(f'Acc: {acc}, F_score: {f_score}, {sk_f}')
-                print(f'FPR: {fp / (tn + fp)}, FNR: {fn / (tp + fn)}')
-                print(f'TPR: {tp / (tp + fn)}, TNR: {tn / (tn + fp)}')
+                # print(f'Acc: {acc}, F_score: {f_score}, {sk_f}')
+                print(f'FPR: {fpr}, FNR: {fnr}')
+                print(f'TPR: {tpr}, TNR: {tnr}')
                 print(f'Precision: {prc}')
                 print(f'Recall: {rec}')
 
                 index.append(f'G_{i}')
-                fpr_arr = np.append(fpr_arr, float(fp / (tn + fp)))
-                fnr_arr = np.append(fnr_arr, float(fn / (tp + fn)))
-                f_score_arr = np.append(f_score_arr, float(f_score[1]))
+                fpr_arr = np.append(fpr_arr, float(fpr))
+                fnr_arr = np.append(fnr_arr, float(fnr))
+                f_score_arr = np.append(f_score_arr, float(f_score))
 
-                precision_arr = np.append(precision_arr, float(prc[1]))
-                recall_arr = np.append(recall_arr, float(rec[1]))
+                precision_arr = np.append(precision_arr, float(prc))
+                recall_arr = np.append(recall_arr, float(rec))
 
-                data_plot['FPR'].append(float(fp / (tn + fp)))
-                data_plot['FNR'].append(float(fn / (tp + fn)))
-                data_plot['F-score'].append(float(f_score[1]))
-                data_plot['Precision'].append(float(prc[1]))
-                data_plot['Recall'].append(float(rec[1]))
+                data_plot['FPR'].append(float(fpr))
+                data_plot['FNR'].append(float(fnr))
+                data_plot['F-score'].append(float(f_score))
+                data_plot['Precision'].append(float(prc))
+                data_plot['Recall'].append(float(rec))
 
             df = pd.DataFrame({'Precision': data_plot['Precision'],
                                'Recall': data_plot['Recall'],
@@ -117,6 +122,7 @@ def main():
             axes = df.plot.bar(rot=0, subplots=True, grid=True,
                                color=['#FEBCC8', '#C8CFE7', '#C7E5C6'],
                                title=f'Train set - {sources} sources - Top {top_k}') # Test
+
             axes[1].legend(loc=2)
             axes[0].set_title(f'Precision M:{precision_arr.mean():.4f} V:{precision_arr.var():.4f}')
             axes[1].set_title(f'Recall M:{recall_arr.mean():.4f} V:{recall_arr.var():.4f}')
