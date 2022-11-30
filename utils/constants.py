@@ -24,7 +24,7 @@ TOP_K = {1: [1, 2, 5, 7, 10],
          15: [15, 30, 60, 120, 150],
          20: [20, 40, 80, 160, 200]}
 
-MAKE_NEIGHBORS_POSITIVE = True
+MAKE_NEIGHBORS_POSITIVE = False
 
 MODEL_GRAPH_DIR = 'data/model/graph/'
 MODEL_CLASS_DIR = 'data/model/classifier'
