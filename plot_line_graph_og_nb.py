@@ -51,7 +51,7 @@ def main():
             ax3.set_title(f'F-score')
             fig.suptitle(
                 f"{int(s)} source{'' if s == 1 else 's'} - 5% infection - {key.capitalize()}")
-            plt.savefig(f"data/figures/comparison_og_nb/comparison_{int(s)}s_5inf_{key}", dpi=120)
+            plt.savefig(f"data/figures/comparison/comparison_og_nb/comparison_{int(s)}s_5inf_{key}", dpi=120)
 
         for (inf, group_train), (inf_test, group_test) in zip(data_preproc_src_train.groupby(['infection_percentage']),
                                                               data_preproc_src_test.groupby(['infection_percentage'])):
@@ -77,7 +77,7 @@ def main():
             ax2.set_title(f'Recall')
             ax3.set_title(f'F-score')
             fig.suptitle(f"3 sources - {int(inf)}% infection - {key.capitalize()}")
-            plt.savefig(f"data/figures/comparison_og_nb/comparison_3s_{int(inf)}inf_{key}", dpi=120)
+            plt.savefig(f"data/figures/comparison/comparison_og_nb/comparison_3s_{int(inf)}inf_{key}", dpi=120)
 
         for (s, group_train), (s_test, group_test) in zip(data_preproc_inf_many_src_train.groupby(['n_sources']),
                                                           data_preproc_inf_many_src_test.groupby(['n_sources'])):
@@ -104,7 +104,7 @@ def main():
             ax3.set_title(f'F-score')
             fig.suptitle(
                 f"{int(s)} source{'' if s == 1 else 's'} - 15% infection - {key.capitalize()}")
-            plt.savefig(f"data/figures/comparison_og_nb/comparison_{int(s)}s_15inf_{key}",
+            plt.savefig(f"data/figures/comparison/comparison_og_nb/comparison_{int(s)}s_15inf_{key}",
                         dpi=120)
 
 

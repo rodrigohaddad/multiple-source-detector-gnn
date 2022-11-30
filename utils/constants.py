@@ -27,6 +27,7 @@ TOP_K = {1: [1, 2, 5, 7, 10],
 MAKE_NEIGHBORS_POSITIVE = False
 
 MODEL_GRAPH_DIR = 'data/model/graph/'
+MODEL_MIXED = 'data/model/mixed/'
 MODEL_CLASS_DIR = 'data/model/classifier'
 
 MODEL_FILE = 'sagemodel.pickle'

@@ -6,8 +6,6 @@ import pandas as pd
 import numpy as np
 import torchmetrics
 
-from sklearn.metrics import f1_score as sk_f1_score
-
 from utils.constants import MODEL_GRAPH_DIR, GRAPH_ENRICHED, TOP_K, MAKE_NEIGHBORS_POSITIVE
 from utils.test_model import test_pred
 
@@ -127,7 +125,7 @@ def main():
             axes[0].set_title(f'Precision M:{precision_arr.mean():.4f} V:{precision_arr.var():.4f}')
             axes[1].set_title(f'Recall M:{recall_arr.mean():.4f} V:{recall_arr.var():.4f}')
             axes[2].set_title(f'F-score M:{f_score_arr.mean():.4f} V:{f_score_arr.var():.4f}')
-            plt.savefig(f"data/figures/{enriched_path.split('/')[-1]}/{'nb/' if MAKE_NEIGHBORS_POSITIVE else ''}{enriched_path.split('/')[-1]}-test-{top_k}topk",
+            plt.savefig(f"data/figures/individual/{enriched_path.split('/')[-1]}/{'nb/' if MAKE_NEIGHBORS_POSITIVE else ''}{enriched_path.split('/')[-1]}-test-{top_k}topk",
                         dpi=120) #test
 
             metrics_result['n_sources'].append(sources)

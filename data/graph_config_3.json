@@ -1,0 +1,21 @@
+[
+  {
+    "name": "rander",
+    "file_dir": "data/networks/powergrid.edgelist.txt",
+    "graph_type": "er",
+    "n_graphs": 20,
+    "artificial_graph_config": {
+      "n": 1500,
+      "p": 0.0141
+    },
+    "overwrite_previous": false,
+    "infection_config" : {
+      "model": "SI",
+      "n_sources": 10,
+      "max_infected_fraction": 0.15,
+      "params": {
+        "beta": 0.01
+      }
+    }
+  }
+]
