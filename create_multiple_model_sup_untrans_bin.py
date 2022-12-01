@@ -10,6 +10,8 @@ from utils.save_to_pickle import save_to_pickle
 
 def main():
     for filename in os.listdir(NOT_TRANSFORMED_DIR):
+        if 'powergrid' not in filename:
+            continue
         model = SUSAGEBin(dim_in=9,  # data.num_node_features
                           dim_h=128,  # 64
                           dim_out=1,
@@ -31,9 +33,9 @@ def main():
             # testar com directed=False
             train_loader = NeighborLoader(
                 data,
-                # num_neighbors=[-1, 10, 10], # todos de todos (duas camadas)
+                # num_neighbors=[-1, 10, 10],
                 num_neighbors=[-1, -1, -1],
-                batch_size=1500,
+                batch_size=len(data.x),
                 directed=False,
             )
 

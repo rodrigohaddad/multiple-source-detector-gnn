@@ -14,6 +14,8 @@ GRAPH_ENRICHED = ['data/graph_enriched/er_5inf_1s', 'data/graph_enriched/er_5inf
                   'data/graph_enriched/er_20inf_3s', 'data/graph_enriched/er_15inf_10s',
                   'data/graph_enriched/er_15inf_15s', 'data/graph_enriched/er_15inf_20s']
 
+GRAPH_ENRICHED_REAL = ['data/graph_enriched/powergrid_10inf_10s']
+
 
 TOP_K = {1: [1, 2, 5, 7, 10],
          2: [2, 4, 8, 16, 20],

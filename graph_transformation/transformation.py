@@ -35,7 +35,7 @@ class GraphTransform:
         self._create_new_graph([] if keep_old else self._calculate_nodes_weights())
 
         # print(f'Infected graph diameter: {nx.diameter(self.G)}')
-        print(f'Transformed graph diameter: {nx.diameter(self.G_new)}')
+        # print(f'Transformed graph diameter: {nx.diameter(self.G_new)}')
 
         print(f'Infected graph n nodes: {self.G.number_of_nodes()}')
         print(f'Transformed graph n nodes: {self.G_new.number_of_nodes()}')

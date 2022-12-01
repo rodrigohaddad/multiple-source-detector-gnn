@@ -6,7 +6,7 @@ import pandas as pd
 import numpy as np
 import torchmetrics
 
-from utils.constants import MODEL_GRAPH_DIR, GRAPH_ENRICHED, TOP_K, MAKE_NEIGHBORS_POSITIVE
+from utils.constants import MODEL_GRAPH_DIR, GRAPH_ENRICHED, TOP_K, MAKE_NEIGHBORS_POSITIVE, GRAPH_ENRICHED_REAL
 from utils.test_model import test_pred
 
 
@@ -45,7 +45,8 @@ def main():
                       'precision_mean': [], 'recall_mean': [],
                       'infection_percentage': [], 'f_score_mean': []}
     # Load test graphs
-    for enriched_path in GRAPH_ENRICHED:
+    for enriched_path in GRAPH_ENRICHED_REAL:
+    # for enriched_path in GRAPH_ENRICHED:
         sage_model_name = f'graph-sage-{enriched_path.split("/")[-1]}.pickle'
         sage = pickle.load(open(f'{MODEL_GRAPH_DIR}{sage_model_name}', 'rb'))
         sources = int(enriched_path.split('_')[3][:-1])
@@ -59,8 +60,8 @@ def main():
             precision_arr = np.array([])
             recall_arr = np.array([])
 
-            for i, filename in enumerate(os.listdir(f'{enriched_path}/test')):  # /test
-                graph_file = os.path.join(f'{enriched_path}/test', filename)  # /test
+            for i, filename in enumerate(os.listdir(f'{enriched_path}')):  # /test
+                graph_file = os.path.join(f'{enriched_path}', filename)  # /test
                 if not os.path.isfile(graph_file):
                     continue
 
@@ -77,7 +78,7 @@ def main():
 
                 # Eval
                 acc = torchmetrics.functional.accuracy(y_pred, y)
-                f_score = torchmetrics.functional.f1_score(y_pred, y)
+                f_score = torchmetrics.functional.f1_score(y_pred, y, task='binary')
                 # sk_f = sk_f1_score(y, y_pred, average='micro')
 
                 roc = torchmetrics.ROC()
@@ -119,13 +120,13 @@ def main():
 
             axes = df.plot.bar(rot=0, subplots=True, grid=True,
                                color=['#FEBCC8', '#C8CFE7', '#C7E5C6'],
-                               title=f'Test set - {sources} sources - Top {top_k}') # Test
+                               title=f'Train set - {sources} sources - Top {top_k}') # Test
 
             axes[1].legend(loc=2)
             axes[0].set_title(f'Precision M:{precision_arr.mean():.4f} V:{precision_arr.var():.4f}')
             axes[1].set_title(f'Recall M:{recall_arr.mean():.4f} V:{recall_arr.var():.4f}')
             axes[2].set_title(f'F-score M:{f_score_arr.mean():.4f} V:{f_score_arr.var():.4f}')
-            plt.savefig(f"data/figures/individual/{enriched_path.split('/')[-1]}/{'nb/' if MAKE_NEIGHBORS_POSITIVE else ''}{enriched_path.split('/')[-1]}-test-{top_k}topk",
+            plt.savefig(f"data/figures/individual/{enriched_path.split('/')[-1]}/{'nb/' if MAKE_NEIGHBORS_POSITIVE else ''}{enriched_path.split('/')[-1]}-train-{top_k}topk",
                         dpi=120) #test
 
             metrics_result['n_sources'].append(sources)
@@ -135,7 +136,7 @@ def main():
             metrics_result['recall_mean'].append(recall_arr.mean())
             metrics_result['f_score_mean'].append(f_score_arr.mean())
 
-    f = open(f'data/metrics_output_test{"_nb" if MAKE_NEIGHBORS_POSITIVE else ""}.json', 'w') #/test
+    f = open(f'data/metrics_output_powergrid_train{"_nb" if MAKE_NEIGHBORS_POSITIVE else ""}.json', 'w') #/test
     f.write(json.dumps(metrics_result))
 
 
