@@ -136,7 +136,7 @@ def main():
             metrics_result['recall_mean'].append(recall_arr.mean())
             metrics_result['f_score_mean'].append(f_score_arr.mean())
 
-    f = open(f'data/metrics_output_powergrid_train{"_nb" if MAKE_NEIGHBORS_POSITIVE else ""}.json', 'w') #/test
+    f = open(f'data/metrics_output/metrics_output_powergrid_train{"_nb" if MAKE_NEIGHBORS_POSITIVE else ""}.json', 'w') #/test
     f.write(json.dumps(metrics_result))
 
 
