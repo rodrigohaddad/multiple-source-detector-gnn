@@ -3,7 +3,7 @@ import json
 
 
 def load_config():
-    f = open('data/graph_config_3.json')
+    f = open('data/graph_config.json')
     graph_config = json.load(f)
     f.close()
     return [GraphConfig(**param) for param in graph_config]

@@ -4,8 +4,6 @@ import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 
-METRICS_AGGREGATED_FILES = ['metrics_output_train.json', 'metrics_output_train_nb.json',
-                            'metrics_output_test.json', 'metrics_output_test_nb.json']
 
 METRICS_AGGREGATED = {'og': ['metrics_output_train.json', 'metrics_output_test.json'],
                       'nb': ['metrics_output_train_nb.json', 'metrics_output_test_nb.json']}
