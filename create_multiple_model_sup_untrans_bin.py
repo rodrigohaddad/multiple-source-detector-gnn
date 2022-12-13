@@ -4,14 +4,12 @@ import pickle
 from torch_geometric.loader import NeighborLoader
 
 from gnn_embedding.gnn_sup_untrans_bin import SUSAGEBin
-from utils.constants import DEVICE, NOT_TRANSFORMED_DIR, VAL_TRANSFORMED_DIR
+from utils.constants import DEVICE, NOT_TRANSFORMED_DIR
 from utils.save_to_pickle import save_to_pickle
 
 
 def train():
     for dirname in os.listdir(NOT_TRANSFORMED_DIR):
-        # if 'powergrid' not in filename:
-        #     continue
         model = SUSAGEBin(dim_in=9,  # data.num_node_features
                           dim_h=128,  # 64
                           dim_out=1,
@@ -20,8 +18,8 @@ def train():
         model = model.to(DEVICE)
 
         path = os.path.join(NOT_TRANSFORMED_DIR, dirname)
-        path_train = os.path.join(path, '/train')
-        path_val = os.path.join(path, '/val')
+        path_train = f'{path}/train'
+        path_val = f'{path}/val'
         for file_train, file_val in zip(os.listdir(path_train), os.listdir(path_val)):
             # Data train
             file_path_train = os.path.join(path_train, file_train)

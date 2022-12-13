@@ -45,8 +45,11 @@ class GraphTransform:
         graph_config = g_inf.graph_config
         infection_config = graph_config.infection_config
 
+        print(f'N sources: {infection_config.n_sources}')
+        print(f'Max infection fraction: {infection_config.max_infected_fraction}')
+
         incomplete_path = f"graph_enriched/{graph_config.graph_type}_{int(100 * infection_config.max_infected_fraction)}inf_{infection_config.n_sources}s"
-        graph_path_to_be_saved = f"{incomplete_path}{step}"
+        graph_path_to_be_saved = f"{incomplete_path}/{step}"
 
         save_to_pickle(pyg_data,
                        graph_path_to_be_saved,

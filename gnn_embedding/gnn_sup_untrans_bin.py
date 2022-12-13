@@ -63,7 +63,7 @@ class SUSAGEBin(torch.nn.Module):
         criterion = torch.nn.BCEWithLogitsLoss()
         optimizer = self.optimizer
 
-        early_stopper = EarlyStopper(patience=20)
+        early_stopper = EarlyStopper(patience=75)
 
         self.train()
         for epoch in range(epochs + 1):

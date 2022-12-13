@@ -20,6 +20,7 @@ class EarlyStopper:
         # New loss is equal or greater than old loss
         else:
             self.count += 1
+            self.epoch = epoch
 
     def should_stop(self) -> bool:
         self.stop = self.patience <= self.count

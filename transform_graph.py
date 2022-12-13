@@ -8,11 +8,9 @@ from graph_transformation.transformation import GraphTransform
 
 def transform():
     for g_dir in os.listdir(INFECTED_DIR):
-        if 'test' not in g_dir:
-            continue
         path = os.path.join(INFECTED_DIR, g_dir)
         dirs = np.array_split(os.listdir(path), 3)
-        for step, directory in zip(['train', '/val', '/test'], dirs):
+        for step, directory in zip(['train', 'val', 'test'], dirs):
             for filename in directory:
                 file = os.path.join(path, filename)
                 g_inf = pickle.load(open(file, 'rb'))

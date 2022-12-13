@@ -5,8 +5,8 @@ from transform_graph import transform
 
 
 def main():
-    generate()
-    transform()
+    # generate()
+    # transform()
     train()
     for neighbors_positive in [True, False]:
         test(neighbors_positive)

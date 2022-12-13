@@ -1,0 +1,8 @@
+Executable  = main.py
+should_transfer_files = YES
+transfer_input_files = data
+Universe    = vanilla
+Log         = mrsd.log
+Error       = mrsd.err
+transfer_output_files = data/metrics_output
+Queue
