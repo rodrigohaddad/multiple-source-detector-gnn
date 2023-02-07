@@ -1,3 +1,4 @@
+import os
 import copy
 import itertools
 from typing import Any
@@ -13,9 +14,19 @@ from datetime import datetime
 
 
 class GraphTransform:
-    threads = 5
+    threads = 10
 
     def __init__(self, g_inf, k: int, percentile: int, alpha_weight: float, keep_old: bool, file_name: str, step: str):
+        graph_config = g_inf.graph_config
+        infection_config = graph_config.infection_config
+
+        incomplete_path = f"graph_enriched/{graph_config.name}_{int(100 * infection_config.max_infected_fraction)}inf_{infection_config.n_sources}s"
+        graph_path_to_be_saved = f"{incomplete_path}/{step}"
+        file_exists = f"data/{graph_path_to_be_saved}/{file_name.split('.')[0]}-enriched.pickle"
+
+        if os.path.isfile(file_exists):
+            return
+
         self.eta_dict = dict()
         self.alpha_dict = dict()
         self.keep_old = keep_old
@@ -42,14 +53,8 @@ class GraphTransform:
 
         pyg_data = read_as_pyg_data(self.G_new)
 
-        graph_config = g_inf.graph_config
-        infection_config = graph_config.infection_config
-
         print(f'N sources: {infection_config.n_sources}')
         print(f'Max infection fraction: {infection_config.max_infected_fraction}')
-
-        incomplete_path = f"graph_enriched/{graph_config.graph_type}_{int(100 * infection_config.max_infected_fraction)}inf_{infection_config.n_sources}s"
-        graph_path_to_be_saved = f"{incomplete_path}/{step}"
 
         save_to_pickle(pyg_data,
                        graph_path_to_be_saved,

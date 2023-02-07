@@ -7,7 +7,7 @@ from transform_graph import transform
 def main():
     # generate()
     # transform()
-    train()
+    # train()
     for neighbors_positive in [True, False]:
         test(neighbors_positive)
 

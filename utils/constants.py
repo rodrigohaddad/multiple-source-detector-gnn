@@ -17,7 +17,15 @@ TOP_K = {1: [1, 2, 5, 7, 10],
          15: [15, 30, 60, 120, 150],
          20: [20, 40, 80, 160, 200]}
 
-MAKE_NEIGHBORS_POSITIVE = False
+NEW_TOP_K = {3: [3, 6, 9, 12, 15],
+             5: [5, 10, 15, 20, 25],
+             10: [10, 20, 30, 40, 50],
+             15: [15, 30, 45, 60, 75]}
+
+MAKE_NEIGHBORS_POSITIVE = True
+
+NAMES = {'ba': 'BA Network (1500 nodes) -', 'ba5000': 'BA Network (5000 nodes) -', 'er': 'ER Network -',
+         'powergrid': 'Power Grid Network -', 'facebookego': 'Facebook Ego Network -'}
 
 MODEL_GRAPH_DIR = 'data/model/graph/'
 MODEL_MIXED = 'data/model/mixed/'

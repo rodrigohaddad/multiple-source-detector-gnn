@@ -1,8 +1,7 @@
-import os
-
 import ndlib.models.epidemics as ep
 import ndlib.models.ModelConfig as mc
 import random
+import copy
 
 from utils.save_to_pickle import save_to_pickle
 
@@ -22,11 +21,13 @@ class InfectedGraphProvision:
                  graph_config,
                  n_sources,
                  max_infected_fraction):
-        graph_config.infection_config.max_infected_fraction = max_infected_fraction
-        graph_config.infection_config.n_sources = n_sources
+        gc = copy.deepcopy(graph_config)
+        gc.infection_config.max_infected_fraction = max_infected_fraction
+        gc.infection_config.n_sources = n_sources
+
         self.G = graph
-        self.graph_config = graph_config
-        infection_config = graph_config.infection_config
+        self.graph_config = gc
+        infection_config = gc.infection_config
 
         self.model = MODELS[infection_config.model](self.G)
         self.config = mc.Configuration()
@@ -41,8 +42,8 @@ class InfectedGraphProvision:
             self._convert_removed_to_not_infected()
 
         save_to_pickle(self,
-                       f'infected_graph/{graph_config.graph_type}_{int(100*max_infected_fraction)}inf_{n_sources}s',
-                       f'{idx}-{graph_config.graph_type}{int(100*max_infected_fraction)}inf{n_sources}s-infected')
+                       f'infected_graph/{gc.name}_{int(100*max_infected_fraction)}inf_{n_sources}s',
+                       f'{idx}-{gc.graph_type}{int(100*max_infected_fraction)}inf{n_sources}s-infected')
 
     def _add_edge_config(self, param_value, param_name):
         for e in self.G.edges():

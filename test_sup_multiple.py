@@ -6,7 +6,7 @@ import pandas as pd
 import numpy as np
 import torchmetrics
 
-from utils.constants import MODEL_GRAPH_DIR, TOP_K, MAKE_NEIGHBORS_POSITIVE
+from utils.constants import MODEL_GRAPH_DIR, NEW_TOP_K, MAKE_NEIGHBORS_POSITIVE
 from utils.test_model import test_pred
 
 
@@ -52,7 +52,7 @@ def test(neighbors_positive=MAKE_NEIGHBORS_POSITIVE):
         sage = pickle.load(open(f'{MODEL_GRAPH_DIR}{sage_model_name}', 'rb'))
         sources = int(enriched_path.split('_')[3][:-1])
         infection = int(enriched_path.split('_')[2][:len(enriched_path.split('_')[2])-3])
-        for top_k in TOP_K[sources]:
+        for top_k in NEW_TOP_K[sources]:
             data_plot = {'FPR': [], 'FNR': [], 'F-score': [], 'Precision': [], 'Recall': []}
             index = []
             fpr_arr = np.array([])
@@ -99,12 +99,12 @@ def test(neighbors_positive=MAKE_NEIGHBORS_POSITIVE):
                 prc = torchmetrics.functional.precision(y_pred, y)
                 rec = torchmetrics.functional.recall(y_pred, y)
 
-                print(f'N sources pred: {sum(y_pred)}')
+                # print(f'N sources pred: {sum(y_pred)}')
                 # print(f'Acc: {acc}, F_score: {f_score}, {sk_f}')
-                print(f'FPR: {fpr}, FNR: {fnr}')
-                print(f'TPR: {tpr}, TNR: {tnr}')
-                print(f'Precision: {prc}')
-                print(f'Recall: {rec}')
+                # print(f'FPR: {fpr}, FNR: {fnr}')
+                # print(f'TPR: {tpr}, TNR: {tnr}')
+                # print(f'Precision: {prc}')
+                # print(f'Recall: {rec}')
 
                 index.append(f'G_{i}')
                 fpr_arr = np.append(fpr_arr, float(fpr))
@@ -154,4 +154,4 @@ def test(neighbors_positive=MAKE_NEIGHBORS_POSITIVE):
 
 
 if __name__ == '__main__':
-    test()
+    test(True)

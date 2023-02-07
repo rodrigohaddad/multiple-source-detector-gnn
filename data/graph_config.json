@@ -1,49 +1,29 @@
 [
   {
-    "name": "rander",
+    "name": "ba5000",
+    "graph_type": "ba",
+    "n_graphs": 30,
+    "artificial_graph_config": {
+      "n": 5000,
+      "m": 12
+    },
+    "overwrite_previous": false,
+    "infection_config" : {
+      "model": "SI",
+      "n_sources": [3, 5, 10, 15],
+      "max_infected_fraction": [0.05, 0.1, 0.2, 0.3],
+      "params": {
+        "beta": 0.01
+      }
+    }
+  },
+  {
+    "name": "er5000",
     "graph_type": "er",
-    "n_graphs": 9,
+    "n_graphs": 30,
     "artificial_graph_config": {
-      "n": 1500,
-      "p": 0.0141
-    },
-    "overwrite_previous": false,
-    "infection_config" : {
-      "model": "SI",
-      "n_sources": [3, 5, 10, 15],
-      "max_infected_fraction": [0.05, 0.1, 0.2, 0.3],
-      "params": {
-        "beta": 0.01
-      }
-    }
-  },
-  {
-    "name": "powergrid",
-    "file_path": "data/networks/powergrid.edgelist.txt",
-    "graph_type": "powergrid",
-    "n_graphs": 20,
-    "artificial_graph_config": {
-      "n": 1500,
-      "p": 0.0141
-    },
-    "overwrite_previous": false,
-    "infection_config" : {
-      "model": "SI",
-      "n_sources": [3, 5, 10, 15],
-      "max_infected_fraction": [0.05, 0.1, 0.2, 0.3],
-      "params": {
-        "beta": 0.01
-      }
-    }
-  },
-  {
-    "name": "facebookego",
-    "file_path": "data/networks/facebookego.txt",
-    "graph_type": "facebookego",
-    "n_graphs": 20,
-    "artificial_graph_config": {
-      "n": 1500,
-      "p": 0.0141
+      "n": 5000,
+      "p": 0.00492
     },
     "overwrite_previous": false,
     "infection_config" : {

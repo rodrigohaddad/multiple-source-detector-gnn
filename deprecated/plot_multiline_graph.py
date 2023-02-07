@@ -7,18 +7,21 @@ import matplotlib.pyplot as plt
 
 from utils.constants import COLORS
 
-F = {'og': pd.DataFrame(json.load(open(f'data/metrics_output/metrics_output.json', 'r'))),
-     'nb': pd.DataFrame(json.load(open(f'data/metrics_output/metrics_output_nb.json', 'r')))}
+F = {'og': pd.DataFrame(json.load(open(f'data/metrics_output/metrics_output_mixed.json', 'r'))),
+     'nb': pd.DataFrame(json.load(open(f'data/metrics_output/metrics_output_mixed_nb.json', 'r')))}
 
 SOURCES = [3, 5, 10, 15]
 SYMBOLS = ['o', '^', 's', '*']
-# INFECTIONS = [5, 10, 20, 30]
-INFECTIONS = [30]
+INFECTIONS = [5, 10, 20, 30]
+# INFECTIONS = [30]
+
+NAMES = {'ba': 'BA Network -', 'er': 'ER Network -',
+         'powergrid': 'Power Grid Network -', 'facebookego': 'Facebook Ego Network -'}
 
 
 def main():
     sns.set_style("whitegrid")
-    my_xticks = ['s', '2s', '2\u00b2s'.format(), '2\u00b3s'.format(), '10s']
+    my_xticks = ['s', '2s', '3s', '4s', '5s']
     # cmap = plt.get_cmap('tab20b')
     # for c in cmap.colors:
     #     print(matplotlib.colors.to_hex(c))
@@ -28,7 +31,7 @@ def main():
 
     for og_name, nb_name in zip(og_names, nb_names):
         for inf in INFECTIONS:
-            fig, (ax1, ax2, ax3) = plt.subplots(1, 3, figsize=(24, 5))
+            fig, (ax1, ax2, ax3) = plt.subplots(1, 3, figsize=(20, 5), layout='constrained')
             sources_lines_og_1 = []
             sources_lines_og_2 = []
             sources_lines_og_3 = []
@@ -38,7 +41,6 @@ def main():
             for key, (name, data) in zip(['og', 'nb'], [og_name, nb_name]):
                 data_inf = data[data['infection_percentage'] == inf]
                 name = name
-                # colocar formas da curva
                 for s, symbol in zip(SOURCES, SYMBOLS):
                     # loc = 'upper right' if key == 'nb' else 'lower right'
                     data_inf_s = data_inf[data_inf['n_sources'] == s]
@@ -68,20 +70,25 @@ def main():
                         sources_lines_og_2.append(line2[0])
                         sources_lines_og_3.append(line3[0])
 
-            first_legend_1 = ax1.legend(handles=sources_lines_nb_1, loc='upper right', bbox_to_anchor=(1, 0.5),
+            first_legend_1 = ax1.legend(handles=sources_lines_nb_1, loc='lower left', bbox_to_anchor=(-0.3, 0.5),
                                         title='w neighbors')
+
+            # first_legend_1 = ax1.legend(handles=sources_lines_nb_1, loc='lower left', mode='expand', ncol=3,
+            #                             bbox_to_anchor=(0, 1.02, 1, 0.2),
+            #                             title='w neighbors')
+
             ax1.add_artist(first_legend_1)
-            ax1.legend(handles=sources_lines_og_1, loc='lower right', bbox_to_anchor=(1, 0.5), title='w/o neighbors')
+            ax1.legend(handles=sources_lines_og_1, loc='upper left', bbox_to_anchor=(-0.3, 0.5), title='w/o neighbors')
 
-            first_legend_2 = ax2.legend(handles=sources_lines_nb_2, loc='upper right', bbox_to_anchor=(1, 0.5),
-                                        title='w neighbors')
-            ax2.add_artist(first_legend_2)
-            ax2.legend(handles=sources_lines_og_2, loc='lower right', bbox_to_anchor=(1, 0.5), title='w/o neighbors')
-
-            first_legend_3 = ax3.legend(handles=sources_lines_nb_3, loc='upper right', bbox_to_anchor=(1, 0.5),
-                                        title='w neighbors')
-            ax3.add_artist(first_legend_3)
-            ax3.legend(handles=sources_lines_og_3, loc='lower right', bbox_to_anchor=(1, 0.5), title='w/o neighbors')
+            # first_legend_2 = ax2.legend(handles=sources_lines_nb_2, loc='upper left', bbox_to_anchor=(1, 0.5),
+            #                             title='w neighbors')
+            # ax2.add_artist(first_legend_2)
+            # ax2.legend(handles=sources_lines_og_2, loc='upper left', bbox_to_anchor=(1, 1), title='w/o neighbors')
+            #
+            # first_legend_3 = ax3.legend(handles=sources_lines_nb_3, loc='upper left', bbox_to_anchor=(1, 0.5),
+            #                             title='w neighbors')
+            # ax3.add_artist(first_legend_3)
+            # ax3.legend(handles=sources_lines_og_3, loc='upper left', bbox_to_anchor=(1, 1), title='w/o neighbors')
 
             ax1.set_title(f'Precision')
             ax1.set_xlabel('top k')
@@ -96,9 +103,9 @@ def main():
             ax3.set_ylabel('f-score mean')
 
             fig.suptitle(
-                f"{name.capitalize()} {inf}% infection")
+                f"{NAMES[name]} {inf}% Infection", fontweight='bold')
             plt.savefig(
-                f"data/figures/comparison/comparison_infection_multiline/comparison_{inf}inf_{name}",
+                f"data/figures/comparison/comparison_infection_multiline_mixed/comparison_{name}_{inf}inf",
                 dpi=120)
 
 
