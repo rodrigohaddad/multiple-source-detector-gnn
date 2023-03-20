@@ -154,4 +154,4 @@ def test(neighbors_positive=MAKE_NEIGHBORS_POSITIVE):
 
 
 if __name__ == '__main__':
-    test(True)
+    test(False)

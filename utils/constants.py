@@ -24,8 +24,9 @@ NEW_TOP_K = {3: [3, 6, 9, 12, 15],
 
 MAKE_NEIGHBORS_POSITIVE = True
 
-NAMES = {'ba': 'BA Network (1500 nodes) -', 'ba5000': 'BA Network (5000 nodes) -', 'er': 'ER Network -',
-         'powergrid': 'Power Grid Network -', 'facebookego': 'Facebook Ego Network -'}
+NAMES = {'ba': 'BA Network (1500 nodes) -', 'ba5000': 'BA Network (5000 nodes) -', 'er': 'ER Network (1500 nodes) -',
+         'er5000': 'ER Network (5000 nodes) -', 'powergrid': 'Power Grid Network -',
+         'facebookego': 'Facebook Ego Network -'}
 
 MODEL_GRAPH_DIR = 'data/model/graph/'
 MODEL_MIXED = 'data/model/mixed/'

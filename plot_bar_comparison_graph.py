@@ -12,8 +12,8 @@ f_og = {'individual': pd.DataFrame(json.load(open(f'data/metrics_output/metrics_
 f_nb = {'individual': pd.DataFrame(json.load(open(f'data/metrics_output/metrics_output_nb.json', 'r'))),
         'mixed': pd.DataFrame(json.load(open(f'data/metrics_output/metrics_output_mixed_nb.json', 'r')))}
 
-Y_LIM = {'nb': {'ba': 0.2, 'ba5000': 0.1, 'er': 0.25, 'facebookego': 0.15, 'powergrid': 0.35},
-         'og': {'ba': 0.21, 'ba5000': 0.14, 'er': 0.25, 'facebookego': 0.28, 'powergrid': 0.23}}
+Y_LIM = {'nb': {'ba': 0.2, 'ba5000': 0.1, 'er': 0.25, 'er5000': 0.13, 'facebookego': 0.15, 'powergrid': 0.35},
+         'og': {'ba': 0.21, 'ba5000': 0.14, 'er': 0.25, 'er5000': 0.18, 'facebookego': 0.28, 'powergrid': 0.23}}
 
 
 def main():
