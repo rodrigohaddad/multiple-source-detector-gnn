@@ -17,7 +17,7 @@ def transform():
                 file = os.path.join(path, filename)
                 g_inf = pickle.load(open(file, 'rb'))
                 GraphTransform(g_inf=g_inf,
-                               k=4,
+                               k_hop=4,
                                percentile=50,
                                alpha_weight=.5,
                                keep_old=True,

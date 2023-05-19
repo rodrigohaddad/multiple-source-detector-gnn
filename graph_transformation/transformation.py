@@ -16,7 +16,7 @@ from datetime import datetime
 class GraphTransform:
     threads = 10
 
-    def __init__(self, g_inf, k: int, percentile: int, alpha_weight: float, keep_old: bool, file_name: str, step: str):
+    def __init__(self, g_inf, k_hop: int, percentile: int, alpha_weight: float, keep_old: bool, file_name: str, step: str):
         graph_config = g_inf.graph_config
         infection_config = graph_config.infection_config
 
@@ -37,7 +37,7 @@ class GraphTransform:
 
         self.G = g_inf.G
         self.model = g_inf.model
-        self.k = k
+        self.k = k_hop
         self.percentile = percentile
         self.alpha_weight = alpha_weight
 

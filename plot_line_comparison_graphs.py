@@ -18,9 +18,9 @@ NAMES = {'ba': 'BA Network (1500 nodes)', 'ba5000': 'BA Network (5000 nodes)', '
          'facebookego': 'Facebook Ego Network'}
 
 graph_types = {
-    'Precision': ['precision mean', 'precision_mean'],
+    # 'Precision': ['precision mean', 'precision_mean'],
     # 'Recall': ['recall mean', 'recall_mean'],
-    # 'F-score': ['f-score mean', 'f_score_mean']
+    'F-score': ['f-score mean', 'f_score_mean']
 }
 
 color_line = {10: '#009337', 20: '#014182', 30: '#9a0200'}
