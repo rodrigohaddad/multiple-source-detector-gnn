@@ -30,6 +30,7 @@ NAMES = {'ba': 'BA Network (1500 nodes) -', 'ba5000': 'BA Network (5000 nodes) -
 
 MODEL_GRAPH_DIR = 'data/model/graph/'
 MODEL_MIXED = 'data/model/mixed/'
+MODEL_ABLATION = 'data/model/untransformed/'
 
 COLORS = {'nb': {3: '#393b79', 5: '#5254a3', 10: '#6b6ecf', 15: '#9c9ede'},
           'og': {3: '#637939', 5: '#8ca252', 10: '#b5cf6b', 15: '#cedb9c'}}
