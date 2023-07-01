@@ -1,0 +1,40 @@
+[
+  {
+    "name": "powergrid",
+    "file_path": "data/networks/powergrid.edgelist.txt",
+    "graph_type": "powergrid",
+    "n_graphs": 30,
+    "artificial_graph_config": {
+      "n": 1500,
+      "p": 0.0141
+    },
+    "overwrite_previous": false,
+    "infection_config" : {
+      "model": "SI",
+      "n_sources": [3, 5],
+      "max_infected_fraction": [0.3],
+      "params": {
+        "beta": 0.01
+      }
+    }
+  },
+  {
+    "name": "facebookego",
+    "file_path": "data/networks/facebookego.txt",
+    "graph_type": "facebookego",
+    "n_graphs": 30,
+    "artificial_graph_config": {
+      "n": 1500,
+      "p": 0.0141
+    },
+    "overwrite_previous": false,
+    "infection_config" : {
+      "model": "SI",
+      "n_sources": [3, 5],
+      "max_infected_fraction": [0.2, 0.3],
+      "params": {
+        "beta": 0.01
+      }
+    }
+  }
+]

@@ -1,3 +1,5 @@
+import os
+
 import pickle
 import networkx as nx
 
@@ -7,6 +9,9 @@ from utils.constants import DEVICE
 
 
 def save_to_pickle(obj, dire, name):
+    if not os.path.isdir(f"data/{dire}"):
+        os.makedirs(f"data/{dire}")
+
     pickle.dump(obj, open(f"data/{dire}/{name}.pickle", "wb"))
 
 

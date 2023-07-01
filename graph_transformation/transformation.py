@@ -1,3 +1,4 @@
+import os
 import copy
 import itertools
 from typing import Any
@@ -13,9 +14,19 @@ from datetime import datetime
 
 
 class GraphTransform:
-    threads = 5
+    threads = 10
 
-    def __init__(self, g_inf, k: int, percentile: int, alpha_weight: float, keep_old: bool):
+    def __init__(self, g_inf, k_hop: int, percentile: int, alpha_weight: float, keep_old: bool, file_name: str, step: str):
+        graph_config = g_inf.graph_config
+        infection_config = graph_config.infection_config
+
+        incomplete_path = f"graph_enriched/{graph_config.name}_{int(100 * infection_config.max_infected_fraction)}inf_{infection_config.n_sources}s"
+        graph_path_to_be_saved = f"{incomplete_path}/{step}"
+        file_exists = f"data/{graph_path_to_be_saved}/{file_name.split('.')[0]}-enriched.pickle"
+
+        if os.path.isfile(file_exists):
+            return
+
         self.eta_dict = dict()
         self.alpha_dict = dict()
         self.keep_old = keep_old
@@ -26,7 +37,7 @@ class GraphTransform:
 
         self.G = g_inf.G
         self.model = g_inf.model
-        self.k = k
+        self.k = k_hop
         self.percentile = percentile
         self.alpha_weight = alpha_weight
 
@@ -35,15 +46,19 @@ class GraphTransform:
         self._create_new_graph([] if keep_old else self._calculate_nodes_weights())
 
         # print(f'Infected graph diameter: {nx.diameter(self.G)}')
-        print(f'Transformed graph diameter: {nx.diameter(self.G_new)}')
+        # print(f'Transformed graph diameter: {nx.diameter(self.G_new)}')
 
         print(f'Infected graph n nodes: {self.G.number_of_nodes()}')
         print(f'Transformed graph n nodes: {self.G_new.number_of_nodes()}')
 
         pyg_data = read_as_pyg_data(self.G_new)
+
+        print(f'N sources: {infection_config.n_sources}')
+        print(f'Max infection fraction: {infection_config.max_infected_fraction}')
+
         save_to_pickle(pyg_data,
-                       'graph_not_transformed_3s_10inf' if keep_old else 'graph_transformed',
-                       f"{g_inf.graph_config.name}-{'not-transformed' if keep_old else 'transformed'}")
+                       graph_path_to_be_saved,
+                       f"{file_name.split('.')[0]}-enriched")
         del pyg_data
 
         print('')

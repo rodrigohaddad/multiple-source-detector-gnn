@@ -1,4 +1,5 @@
 import networkx as nx
+import numpy as np
 
 
 class GraphFactory:
@@ -13,7 +14,8 @@ class GraphFactory:
     def _create_random_graph(graph_type: str, artificial_graph_config):
         graphs = {'er': nx.erdos_renyi_graph,
                   'ba': nx.barabasi_albert_graph}
-        return graphs[graph_type](**artificial_graph_config)
+        seed = {'seed': np.random} if graph_type == 'ba' else {}
+        return graphs[graph_type](**artificial_graph_config, **seed)
 
     def _create_graph(self, file_dir: str, graph_type: str, artificial_graph_config: dict):
         if not len(file_dir):
