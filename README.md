@@ -1,4 +1,4 @@
-# Multiple Source Detector
+# GCN Epidemic Sources Detector
 
 In progress...
 
