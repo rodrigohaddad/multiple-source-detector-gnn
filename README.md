@@ -1,5 +1,5 @@
 # GCN Epidemic Source Detector
-An algorithm that uses enriched node information from epidemic infected graphs to train a GCN the is later used to detect epidemic sources.
+An algorithm that uses enriched node information from epidemic infected graphs to train a GCN that is later used to detect epidemic sources.
 
 ## Steps:
 1) *generate_input.py*: in order to run experiments, it's necessary first to generate infected graphs. Configure graph_config.json with type of network and infection parameters to be generated and run generate_input.py to generate said infected graphs.
